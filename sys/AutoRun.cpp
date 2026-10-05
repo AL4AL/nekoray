@@ -223,14 +223,22 @@ void AutoRun_SetEnabled(bool enable) {
             if (legacy != appName) QFile::remove(userAutoStartPath + legacy + ".desktop");
         }
     } else {
-        QFile::remove(desktopFileLocation);
+        // remove current and legacy names so disabling really disables
+        const QStringList legacyAppNames{"nekoray", "nekobox"};
+        for (const auto &legacy : legacyAppNames) {
+            QFile::remove(userAutoStartPath + legacy + ".desktop");
+        }
     }
 }
 
 bool AutoRun_IsEnabled() {
-    QString appName = QCoreApplication::applicationName();
-    QString desktopFileLocation = getUserAutostartDir_private() + appName + QLatin1String(".desktop");
-    return QFile::exists(desktopFileLocation);
+    // current and legacy app names (older versions wrote nekobox.desktop
+    // in non-appdata mode)
+    const QStringList appNames{"nekoray", "nekobox"};
+    for (const auto &appName : appNames) {
+        if (QFile::exists(getUserAutostartDir_private() + appName + ".desktop")) return true;
+    }
+    return false;
 }
 
 #endif
