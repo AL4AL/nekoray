@@ -12,6 +12,11 @@ on:
       artifact-pack:
         description: "artifact-pack: If want ignore"
         required: false
+
+# the default GITHUB_TOKEN is read-only on new repos; ghr needs to create
+# the release (and its assets)
+permissions:
+  contents: write
 jobs:
   build-go:
     strategy:
