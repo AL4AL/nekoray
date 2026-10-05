@@ -14,6 +14,17 @@ fi
 pushd sing-box
 git checkout "$COMMIT_SING_BOX"
 
+# XHTTP transport (from hiddify-sing-box), see patches/sing-box-xhttp.patch
+if git apply --reverse --check "$SRC_ROOT/patches/sing-box-xhttp.patch" >/dev/null 2>&1; then
+  echo "sing-box: xhttp patch already applied"
+elif git apply --check "$SRC_ROOT/patches/sing-box-xhttp.patch" >/dev/null 2>&1; then
+  git apply "$SRC_ROOT/patches/sing-box-xhttp.patch"
+  echo "sing-box: xhttp patch applied"
+else
+  echo "sing-box: FAILED to apply patches/sing-box-xhttp.patch" >&2
+  exit 1
+fi
+
 popd
 
 ####

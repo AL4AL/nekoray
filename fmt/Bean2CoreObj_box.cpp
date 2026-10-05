@@ -31,6 +31,21 @@ namespace NekoGui_fmt {
             } else if (network == "httpupgrade") {
                 if (!path.isEmpty()) transport["path"] = path;
                 if (!host.isEmpty()) transport["host"] = host;
+            } else if (network == "xhttp") {
+                // XHTTP (splithttp), the core accepts both the Xray-style
+                // camelCase keys and sing-box snake_case keys in "extra".
+                if (!xhttp_extra.trimmed().isEmpty()) {
+                    auto extraObj = QString2QJsonObject(xhttp_extra);
+                    for (auto it = extraObj.begin(); it != extraObj.end(); ++it) {
+                        transport[it.key()] = it.value();
+                    }
+                }
+                if (!xhttp_mode.trimmed().isEmpty()) transport["mode"] = xhttp_mode.trimmed();
+                if (!path.isEmpty()) transport["path"] = path;
+                if (!host.isEmpty()) transport["host"] = host;
+                if (!transport.contains("mode") || transport["mode"].toString().isEmpty()) {
+                    transport["mode"] = "auto";
+                }
             }
             outbound->insert("transport", transport);
         } else if (header_type == "http") {
@@ -69,6 +84,11 @@ namespace NekoGui_fmt {
                     {"enabled", true},
                     {"fingerprint", fp},
                 };
+            }
+            if (!cert_sha256.trimmed().isEmpty()) {
+                auto pins = cert_sha256.split(",", Qt::SkipEmptyParts);
+                for (auto &pin: pins) pin = pin.trimmed();
+                tls["certificate_sha256"] = QList2QJsonArray(pins);
             }
             outbound->insert("tls", tls);
         }

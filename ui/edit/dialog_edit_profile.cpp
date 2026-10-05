@@ -32,6 +32,10 @@ DialogEditProfile::DialogEditProfile(const QString &_type, int profileOrGroupId,
     connect(ui->network, &QComboBox::currentTextChanged, this, [=](const QString &txt) {
         ui->network_box->setTitle(network_title_base.arg(txt));
         // 传输设置
+        ui->xhttp_mode->setVisible(false);
+        ui->xhttp_mode_l->setVisible(false);
+        ui->xhttp_extra->setVisible(false);
+        ui->xhttp_extra_l->setVisible(false);
         if (txt == "tcp") {
             ui->header_type->setVisible(true);
             ui->header_type_l->setVisible(true);
@@ -53,6 +57,17 @@ DialogEditProfile::DialogEditProfile(const QString &_type, int profileOrGroupId,
             ui->path_l->setVisible(true);
             ui->host->setVisible(true);
             ui->host_l->setVisible(true);
+        } else if (txt == "xhttp") {
+            ui->header_type->setVisible(false);
+            ui->header_type_l->setVisible(false);
+            ui->path->setVisible(true);
+            ui->path_l->setVisible(true);
+            ui->host->setVisible(true);
+            ui->host_l->setVisible(true);
+            ui->xhttp_mode->setVisible(true);
+            ui->xhttp_mode_l->setVisible(true);
+            ui->xhttp_extra->setVisible(true);
+            ui->xhttp_extra_l->setVisible(true);
         } else {
             ui->header_type->setVisible(false);
             ui->header_type_l->setVisible(false);
@@ -212,6 +227,8 @@ void DialogEditProfile::typeSelected(const QString &newType) {
         ui->packet_encoding->setCurrentText(stream->packet_encoding);
         ui->path->setText(stream->path);
         ui->host->setText(stream->host);
+        ui->xhttp_mode->setCurrentText(stream->xhttp_mode);
+        ui->xhttp_extra->setText(stream->xhttp_extra);
         ui->sni->setText(stream->sni);
         ui->alpn->setText(stream->alpn);
         if (newEnt) {
@@ -347,6 +364,8 @@ bool DialogEditProfile::onEnd() {
         stream->packet_encoding = ui->packet_encoding->currentText();
         stream->path = ui->path->text();
         stream->host = ui->host->text();
+        stream->xhttp_mode = ui->xhttp_mode->currentText();
+        stream->xhttp_extra = ui->xhttp_extra->text();
         stream->sni = ui->sni->text();
         stream->alpn = ui->alpn->text();
         stream->utlsFingerprint = ui->utlsFingerprint->currentText();
@@ -445,6 +464,8 @@ void DialogEditProfile::on_apply_to_group_clicked() {
         apply_to_group_ui[ui->alpn] = new FloatCheckBox(ui->alpn, this);
         apply_to_group_ui[ui->host] = new FloatCheckBox(ui->host, this);
         apply_to_group_ui[ui->path] = new FloatCheckBox(ui->path, this);
+        apply_to_group_ui[ui->xhttp_mode] = new FloatCheckBox(ui->xhttp_mode, this);
+        apply_to_group_ui[ui->xhttp_extra] = new FloatCheckBox(ui->xhttp_extra, this);
         apply_to_group_ui[ui->utlsFingerprint] = new FloatCheckBox(ui->utlsFingerprint, this);
         apply_to_group_ui[ui->insecure] = new FloatCheckBox(ui->insecure, this);
         apply_to_group_ui[ui->certificate_edit] = new FloatCheckBox(ui->certificate_edit, this);
@@ -509,6 +530,10 @@ void DialogEditProfile::do_apply_to_group(const std::shared_ptr<NekoGui::Group> 
         copyStream(&stream->host);
     } else if (key == ui->path) {
         copyStream(&stream->path);
+    } else if (key == ui->xhttp_mode) {
+        copyStream(&stream->xhttp_mode);
+    } else if (key == ui->xhttp_extra) {
+        copyStream(&stream->xhttp_extra);
     } else if (key == ui->utlsFingerprint) {
         copyStream(&stream->utlsFingerprint);
     } else if (key == ui->insecure) {

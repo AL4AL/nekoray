@@ -329,7 +329,7 @@ namespace NekoGui {
             needMux &= dataStore->mux_concurrency > 0;
 
             if (stream != nullptr) {
-                if (stream->network == "grpc" || stream->network == "quic" || (stream->network == "http" && stream->security == "tls")) {
+                if (stream->network == "grpc" || stream->network == "quic" || stream->network == "xhttp" || (stream->network == "http" && stream->security == "tls")) {
                     needMux = false;
                 }
                 if (stream->multiplex_status == 0) {

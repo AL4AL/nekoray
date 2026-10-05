@@ -40,6 +40,7 @@ namespace NekoGui_fmt {
         if (!stream->sni.isEmpty()) query.addQueryItem("sni", stream->sni);
         if (!stream->alpn.isEmpty()) query.addQueryItem("alpn", stream->alpn);
         if (stream->allow_insecure) query.addQueryItem("allowInsecure", "1");
+        if (!stream->cert_sha256.isEmpty()) query.addQueryItem("pcs", stream->cert_sha256);
         if (!stream->utlsFingerprint.isEmpty()) query.addQueryItem("fp", stream->utlsFingerprint);
 
         if (security == "reality") {
@@ -54,6 +55,11 @@ namespace NekoGui_fmt {
         if (stream->network == "ws" || stream->network == "http" || stream->network == "httpupgrade") {
             if (!stream->path.isEmpty()) query.addQueryItem("path", stream->path);
             if (!stream->host.isEmpty()) query.addQueryItem("host", stream->host);
+        } else if (stream->network == "xhttp") {
+            if (!stream->path.isEmpty()) query.addQueryItem("path", stream->path);
+            if (!stream->host.isEmpty()) query.addQueryItem("host", stream->host);
+            if (!stream->xhttp_mode.isEmpty()) query.addQueryItem("mode", stream->xhttp_mode);
+            if (!stream->xhttp_extra.isEmpty()) query.addQueryItem("extra", stream->xhttp_extra);
         } else if (stream->network == "grpc") {
             if (!stream->path.isEmpty()) query.addQueryItem("serviceName", stream->path);
         } else if (stream->network == "tcp") {
@@ -117,6 +123,11 @@ namespace NekoGui_fmt {
                 {"tls", stream->security == "tls" ? "tls" : ""},
                 {"sni", stream->sni},
             };
+            if (stream->network == "xhttp") {
+                if (!stream->xhttp_mode.isEmpty()) N["mode"] = stream->xhttp_mode;
+                if (!stream->xhttp_extra.isEmpty()) N["extra"] = stream->xhttp_extra;
+            }
+            if (!stream->cert_sha256.isEmpty()) N["pcs"] = stream->cert_sha256;
             return "vmess://" + QJsonObject2QString(N, true).toUtf8().toBase64();
         } else {
             // ducksoft format
@@ -137,6 +148,7 @@ namespace NekoGui_fmt {
 
             if (!stream->sni.isEmpty()) query.addQueryItem("sni", stream->sni);
             if (stream->allow_insecure) query.addQueryItem("allowInsecure", "1");
+            if (!stream->cert_sha256.isEmpty()) query.addQueryItem("pcs", stream->cert_sha256);
             if (stream->utlsFingerprint.isEmpty()) {
                 query.addQueryItem("fp", NekoGui::dataStore->utlsFingerprint);
             } else {
@@ -155,6 +167,11 @@ namespace NekoGui_fmt {
             if (stream->network == "ws" || stream->network == "http" || stream->network == "httpupgrade") {
                 if (!stream->path.isEmpty()) query.addQueryItem("path", stream->path);
                 if (!stream->host.isEmpty()) query.addQueryItem("host", stream->host);
+            } else if (stream->network == "xhttp") {
+                if (!stream->path.isEmpty()) query.addQueryItem("path", stream->path);
+                if (!stream->host.isEmpty()) query.addQueryItem("host", stream->host);
+                if (!stream->xhttp_mode.isEmpty()) query.addQueryItem("mode", stream->xhttp_mode);
+                if (!stream->xhttp_extra.isEmpty()) query.addQueryItem("extra", stream->xhttp_extra);
             } else if (stream->network == "grpc") {
                 if (!stream->path.isEmpty()) query.addQueryItem("serviceName", stream->path);
             } else if (stream->network == "tcp") {

@@ -255,17 +255,22 @@
                <string notr="true">http</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string notr="true">grpc</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string notr="true">quic</string>
-              </property>
-             </item>
-            </widget>
+              <item>
+               <property name="text">
+                <string notr="true">grpc</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string notr="true">xhttp</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string notr="true">quic</string>
+               </property>
+              </item>
+             </widget>
            </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="packet_encoding">
@@ -457,14 +462,72 @@ security (QUIC)</string>
          <item row="4" column="1">
           <widget class="MyLineEdit" name="ws_early_data_name"/>
          </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="ws_early_data_name_l">
-           <property name="text">
-            <string notr="true">EarlyData Name</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+          <item row="4" column="0">
+           <widget class="QLabel" name="ws_early_data_name_l">
+            <property name="text">
+             <string notr="true">EarlyData Name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="xhttp_mode_l">
+            <property name="toolTip">
+             <string notr="true">XHTTP mode (auto/packet-up/stream-up/stream-one)</string>
+            </property>
+            <property name="text">
+             <string notr="true">Mode</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="xhttp_mode">
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+            <property name="insertPolicy">
+             <enum>QComboBox::NoInsert</enum>
+            </property>
+            <item>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">auto</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">packet-up</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">stream-up</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">stream-one</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="xhttp_extra_l">
+            <property name="toolTip">
+             <string notr="true">XHTTP extra raw JSON, format: { XHTTPObject }</string>
+            </property>
+            <property name="text">
+             <string notr="true">Extra</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="MyLineEdit" name="xhttp_extra"/>
+          </item>
+         </layout>
        </widget>
       </item>
       <item>

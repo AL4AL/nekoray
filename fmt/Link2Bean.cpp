@@ -59,6 +59,9 @@ namespace NekoGui_fmt {
         if (type == "h2") {
             type = "http";
         }
+        if (type == "splithttp") {
+            type = "xhttp";
+        }
         stream->network = type;
 
         if (proxy_type == proxy_Trojan) {
@@ -79,6 +82,8 @@ namespace NekoGui_fmt {
         if (stream->utlsFingerprint.isEmpty()) {
             stream->utlsFingerprint = NekoGui::dataStore->utlsFingerprint;
         }
+        stream->cert_sha256 = GetQueryValue(query, "pcs");
+        if (stream->cert_sha256.isEmpty()) stream->cert_sha256 = GetQueryValue(query, "pinSHA256");
 
         // type
         if (stream->network == "ws") {
@@ -90,6 +95,11 @@ namespace NekoGui_fmt {
         } else if (stream->network == "httpupgrade") {
             stream->path = GetQueryValue(query, "path", "");
             stream->host = GetQueryValue(query, "host", "");
+        } else if (stream->network == "xhttp") {
+            stream->path = GetQueryValue(query, "path", "");
+            stream->host = GetQueryValue(query, "host", "");
+            stream->xhttp_mode = GetQueryValue(query, "mode", "");
+            stream->xhttp_extra = GetQueryValue(query, "extra", "");
         } else if (stream->network == "grpc") {
             stream->path = GetQueryValue(query, "serviceName", "");
         } else if (stream->network == "tcp") {
@@ -167,8 +177,21 @@ namespace NekoGui_fmt {
                 if (net == "h2") {
                     net = "http";
                 }
+                if (net == "splithttp") {
+                    net = "xhttp";
+                }
                 stream->network = net;
             }
+            if (stream->network == "xhttp") {
+                stream->xhttp_mode = objN["mode"].toString();
+                if (objN["extra"].isString()) {
+                    stream->xhttp_extra = objN["extra"].toString();
+                } else if (objN["extra"].isObject()) {
+                    stream->xhttp_extra = QJsonObject2QString(objN["extra"].toObject(), true);
+                }
+            }
+            stream->cert_sha256 = objN["pcs"].toString();
+            if (stream->cert_sha256.isEmpty()) stream->cert_sha256 = objN["pinSHA256"].toString();
             auto scy = objN["scy"].toString();
             if (!scy.isEmpty()) security = scy;
             // TLS (XTLS?)
@@ -195,6 +218,9 @@ namespace NekoGui_fmt {
             if (type == "h2") {
                 type = "http";
             }
+            if (type == "splithttp") {
+                type = "xhttp";
+            }
             stream->network = type;
             stream->security = GetQueryValue(query, "security", "tls").replace("reality", "tls");
             auto sni1 = GetQueryValue(query, "sni");
@@ -209,6 +235,8 @@ namespace NekoGui_fmt {
             if (stream->utlsFingerprint.isEmpty()) {
                 stream->utlsFingerprint = NekoGui::dataStore->utlsFingerprint;
             }
+            stream->cert_sha256 = GetQueryValue(query, "pcs");
+            if (stream->cert_sha256.isEmpty()) stream->cert_sha256 = GetQueryValue(query, "pinSHA256");
 
             // type
             if (stream->network == "ws") {
@@ -220,6 +248,11 @@ namespace NekoGui_fmt {
             } else if (stream->network == "httpupgrade") {
                 stream->path = GetQueryValue(query, "path", "");
                 stream->host = GetQueryValue(query, "host", "");
+            } else if (stream->network == "xhttp") {
+                stream->path = GetQueryValue(query, "path", "");
+                stream->host = GetQueryValue(query, "host", "");
+                stream->xhttp_mode = GetQueryValue(query, "mode", "");
+                stream->xhttp_extra = GetQueryValue(query, "extra", "");
             } else if (stream->network == "grpc") {
                 stream->path = GetQueryValue(query, "serviceName", "");
             } else if (stream->network == "tcp") {
