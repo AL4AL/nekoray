@@ -1,4 +1,8 @@
-find_package(Protobuf CONFIG REQUIRED)
+find_package(Protobuf CONFIG QUIET)
+if (NOT Protobuf_FOUND)
+    # Debian/Ubuntu libprotobuf-dev ships no CMake config file
+    find_package(Protobuf REQUIRED)
+endif ()
 
 set(PROTO_FILES
         go/grpc_server/gen/libcore.proto
