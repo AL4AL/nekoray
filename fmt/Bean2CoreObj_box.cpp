@@ -86,9 +86,12 @@ namespace NekoGui_fmt {
                 };
             }
             if (!cert_sha256.trimmed().isEmpty()) {
-                auto pins = cert_sha256.split(",", Qt::SkipEmptyParts);
-                for (auto &pin: pins) pin = pin.trimmed();
-                tls["certificate_sha256"] = QList2QJsonArray(pins);
+                QStringList pins;
+                for (const auto &pin: cert_sha256.split(",")) {
+                    auto p = pin.trimmed();
+                    if (!p.isEmpty()) pins << p;
+                }
+                if (!pins.isEmpty()) tls["certificate_sha256"] = QList2QJsonArray(pins);
             }
             outbound->insert("tls", tls);
         }

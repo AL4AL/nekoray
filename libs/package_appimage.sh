@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo apt-get install fuse -y
-
 cp -r linux64 nekobox.AppDir
 
 # The file for Appimage
@@ -30,7 +28,8 @@ chmod +x nekobox.AppDir/AppRun
 
 curl -fLSO https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool-x86_64.AppImage
-./appimagetool-x86_64.AppImage nekobox.AppDir
+# extract-and-run: CI runners (ubuntu-22.04+) no longer ship libfuse2
+APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool-x86_64.AppImage nekobox.AppDir
 
 # clean
 
