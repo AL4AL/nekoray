@@ -1,6 +1,12 @@
 # NekoBox For PC
 
-> **Update by [AL4AL](https://github.com/AL4AL)** — maintained fork of [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray).> **Added XHTTP (splitHTTP) transport support**: share-link import/export (`type=xhttp`, `mode`, `path`, `host`, `extra`, `pcs`/`pinSHA256`), edit-dialog fields, and a sing-box core port of the hiddify-sing-box implementation with Xray-compatible behavior (HTTP version selection, `certificate_sha256` pinning for self-signed servers).> 本仓库是 [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) 的**更新分支，由 AL4AL 维护**：新增 **XHTTP (splitHTTP)** 传输支持（分享链接导入导出、编辑界面、sing-box 内核移植自 hiddify-sing-box，行为兼容 Xray，支持 `pcs`/`pinSHA256` 证书锁定，可连接自签证书服务器）。> **Releases: https://github.com/AL4AL/nekoray/releases**
+> **Update by [AL4AL](https://github.com/AL4AL)** — maintained fork of [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray).
+>
+> **Added XHTTP (splitHTTP) transport support**: share-link import/export (`type=xhttp`, `mode`, `path`, `host`, `extra`, `pcs`/`pinSHA256`), edit-dialog fields, and a sing-box core port of the hiddify-sing-box implementation with Xray-compatible behavior (HTTP version selection, `certificate_sha256` pinning for self-signed servers).
+>
+> 本仓库是 [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) 的**更新分支，由 AL4AL 维护**：新增 **XHTTP (splitHTTP)** 传输支持（分享链接导入导出、编辑界面、sing-box 内核移植自 hiddify-sing-box，行为兼容 Xray，支持 `pcs`/`pinSHA256` 证书锁定，可连接自签证书服务器）。
+>
+> **Releases: https://github.com/AL4AL/nekoray/releases**
 
 Qt based cross-platform GUI proxy configuration manager (backend: sing-box)
 
@@ -21,6 +27,14 @@ Support Windows / Linux out of the box now.
 [下载 / Download](https://github.com/AL4AL/nekoray/releases)
 
 [安装包的说明，如果你不知道要下载哪一个](https://github.com/MatsuriDayo/nekoray/wiki/Installation-package-description)
+
+### 升级 / Upgrading
+
+从旧版本（上游 4.0.1 deb、zip 便携版等）升级到本仓库版本 / upgrading from older builds:
+
+- 用户数据始终在 `~/.config/nekoray/`，升级不会改动、不会丢失。/ all data lives in `~/.config/nekoray/` and is never touched.
+- 旧版本若把配置留在了程序目录（非 `-appdata` 运行），新版本首次启动会自动导入到 `~/.config/nekoray/`（原文件保留）。/ config left next to older binaries is imported automatically on first start; originals are kept.
+- Debian/Ubuntu: `sudo apt install ./nekoray_*_amd64.deb` 直接覆盖升级；桌面图标改为 hicolor 主题安装，修复 Ubuntu 24.04 / GNOME 46 图标不显示问题。/ the .deb now ships its own desktop entry and hicolor icons (fixes the missing icon on Ubuntu 24.04).
 
 ### Upstream packages / 上游软件包管理
 

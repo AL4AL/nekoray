@@ -2,13 +2,18 @@
 
 ### Debian 系发行版
 
-使用 Debian 系发行版时，推荐使用 .deb 包安装：
+使用 Debian 系发行版时，推荐使用 .deb 包安装（文件名遵循 Debian 规范，如 `nekoray_4.1.1_amd64.deb`）：
 
 ```shell
-sudo apt install ./nekoray-*-debian-x64.deb
+sudo apt install ./nekoray_*_amd64.deb
 ```
 
-安装完成后，桌面快捷方式启动自带参数 `-appdata`，如果想要直接启动并使用之前的配置，注意附带本参数。
+从旧版本升级（上游 4.0.1 deb 或更早版本）直接安装新包即可：
+
+- 用户数据保存在 `~/.config/nekoray/`，升级不会改动。
+- 若旧版本曾以非 `-appdata` 方式运行、数据留在程序目录（如 `/opt/nekoray/config`），首次启动新版本时会自动复制到 `~/.config/nekoray/`（原文件保留）。
+- 桌面入口由软件包本身提供（升级/卸载由 dpkg 正确处理），图标安装到 hicolor 图标主题，修复 Ubuntu 24.04 / GNOME 46 下图标不显示的问题。
+- 直接运行 `nekoray` 命令即可，已自动附带 `-appdata`，无需手动添加。
 
 ### Arch 系发行版
 
