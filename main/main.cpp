@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFileInfo>
 #include <QTranslator>
 #include <QMessageBox>
 #include <QStandardPaths>
@@ -49,6 +50,24 @@ void loadTranslate(const QString& locale) {
 }
 
 #define LOCAL_SERVER_PREFIX "nekoraylocalserver-"
+
+// copy everything from one config dir into another (never overwrites,
+// skips runtime junk); used by the first-run migration below
+static void copy_dir_contents(const QString& from, const QString& to) {
+    QDir fromDir(from);
+    if (!fromDir.exists()) return;
+    QDir().mkpath(to);
+    for (const auto& name : fromDir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
+        if (name == "neko.log" || name == "temp" || name == "updater" || name == "updater.old") continue;
+        const auto src = fromDir.filePath(name);
+        const auto dst = to + "/" + name;
+        if (QFileInfo(src).isDir()) {
+            copy_dir_contents(src, dst);
+        } else if (!QFile::exists(dst)) {
+            QFile::copy(src, dst);
+        }
+    }
+}
 
 int main(int argc, char* argv[]) {
     // Core dump
@@ -107,15 +126,47 @@ int main(int argc, char* argv[]) {
         } else {
             wd.setPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
         }
+    } else {
+        // detect an unwritable install dir (deb / AppImage under /opt or a
+        // read-only mount): fall back to the appdata location instead of
+        // failing with "No permission to write /opt/nekoray" (upstream #1534)
+        QFile probe(wd.filePath(".write-probe"));
+        if (probe.open(QIODevice::Append)) {
+            probe.close();
+            probe.remove();
+        } else {
+            NekoGui::dataStore->flag_use_appdata = true;
+            QApplication::setApplicationName("nekoray");
+            wd.setPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
+        }
     }
     if (!wd.exists()) wd.mkpath(wd.absolutePath());
     if (!wd.exists("config")) wd.mkdir("config");
     QDir::setCurrent(wd.absoluteFilePath("config"));
     QDir("temp").removeRecursively();
 
+    // gentle migration: data written next to the binary by older
+    // non-appdata installs (zip / bare /opt/nekoray/nekobox runs) is
+    // copied into the appdata location once, when appdata is still empty
+    if (NekoGui::dataStore->flag_use_appdata) {
+        const auto legacy_dir = QDir(QApplication::applicationDirPath()).filePath("config");
+        const auto target_dir = QDir::currentPath();
+        if (QDir(legacy_dir).exists("profiles") && !QDir(target_dir).exists("profiles")) {
+            copy_dir_contents(legacy_dir, target_dir);
+            qInfo() << "nekoray: migrated legacy config from" << legacy_dir << "to" << target_dir;
+        }
+    }
+
     // init QApplication
     delete preQApp;
     QApplication a(argc, argv);
+
+    // desktop identity: must match the packaged nekoray.desktop
+    // (Wayland app_id, X11 WM_CLASS and the autostart file name)
+    QCoreApplication::setApplicationName("nekoray");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0) && !defined(Q_OS_WIN)
+    QGuiApplication::setDesktopFileName("nekoray");
+#endif
 
     // dispatchers
     DS_cores = new QThread;

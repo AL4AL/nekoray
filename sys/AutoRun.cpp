@@ -217,6 +217,11 @@ void AutoRun_SetEnabled(bool enable) {
            << QLatin1String("X-GNOME-Autostart-enabled=") << "true" << NEWLINE;
         ts.flush();
         iniFile.close();
+        // drop stale autostart entries written under an older app name
+        const QStringList legacyAppNames{"nekoray", "nekobox"};
+        for (const auto &legacy : legacyAppNames) {
+            if (legacy != appName) QFile::remove(userAutoStartPath + legacy + ".desktop");
+        }
     } else {
         QFile::remove(desktopFileLocation);
     }
