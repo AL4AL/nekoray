@@ -190,9 +190,9 @@ jobs:
           cd deployment
           cp -r public_res/* linux64
           ####
+          # emits nekoray_<tag>_amd64.deb (Debian Policy file naming)
           bash ../libs/package_debian.sh ${{ github.event.inputs.tag }}
-          mv nekoray.deb $version_standalone-debian-x64.deb
-          sudo rm -rf nekoray
+          rm -rf nekoray
       - name: Pack AppImage
         run: |
           source libs/env_deploy.sh
