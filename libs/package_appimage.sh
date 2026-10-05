@@ -28,7 +28,7 @@ chmod +x nekobox.AppDir/AppRun
 
 # build
 
-curl -fLSO https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage
+curl -fLSO https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage nekobox.AppDir
 
