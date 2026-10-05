@@ -66,7 +66,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - platform: windows-2022
+          - platform: windows-2025
             arch: x64
             qt_version: "6.7"
           - platform: ubuntu-22.04
@@ -81,7 +81,7 @@ jobs:
         with:
           submodules: "recursive"
       - name: Install MSVC compiler
-        if: matrix.platform == 'windows-2022'
+        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           # 14.1 is for vs2017, 14.2 is vs2019, following the upstream vcpkg build from Qv2ray-deps repo
@@ -90,7 +90,7 @@ jobs:
       # ========================================================================================================= Qt Install
       - name: Windows - Download Custom Qt ${{ matrix.qt_version }} SDK
         shell: bash
-        if: matrix.platform == 'windows-2022'
+        if: runner.os == 'Windows'
         env:
           DL_QT_VER: ${{ matrix.qt_version }}
         run: bash ./libs/download_qtsdk_win.sh
@@ -105,11 +105,11 @@ jobs:
           key: DepsCache-${{ matrix.platform }}-${{ matrix.arch }}-${{ hashFiles('libs/build_deps_*.sh') }}-Qt${{ matrix.qt_version }}
       - name: Build Dependencies
         shell: bash
-        if: steps.cache-deps.outputs.cache-hit != 'true' && matrix.platform != 'ubuntu-22.04'
+        if: steps.cache-deps.outputs.cache-hit != 'true' && runner.os == 'Windows'
         run: ./libs/build_deps_all.sh
       - name: Build Dependencies (Docker)
         shell: bash
-        if: steps.cache-deps.outputs.cache-hit != 'true' && matrix.platform == 'ubuntu-22.04'
+        if: steps.cache-deps.outputs.cache-hit != 'true' && runner.os == 'Linux'
         run: |
           docker run --rm \
             -v $PWD:/nekoray \
@@ -119,7 +119,7 @@ jobs:
       # ========================================================================================================= Generate MakeFile and Build
       - name: Windows - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'windows-2022'
+        if: runner.os == 'Windows'
         env:
           DL_QT_VER: ${{ matrix.qt_version }}
           CC: cl.exe
@@ -134,7 +134,7 @@ jobs:
           ./libs/deploy_windows64.sh
       - name: Linux - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'ubuntu-22.04'
+        if: runner.os == 'Linux'
         run: |
           docker run --rm \
             -v $PWD:/nekoray \
