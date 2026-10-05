@@ -1,5 +1,7 @@
 # NekoBox For PC
 
+> **Update by [AL4AL](https://github.com/AL4AL)** — maintained fork of [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray).> **Added XHTTP (splitHTTP) transport support**: share-link import/export (`type=xhttp`, `mode`, `path`, `host`, `extra`, `pcs`/`pinSHA256`), edit-dialog fields, and a sing-box core port of the hiddify-sing-box implementation with Xray-compatible behavior (HTTP version selection, `certificate_sha256` pinning for self-signed servers).> 本仓库是 [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) 的**更新分支，由 AL4AL 维护**：新增 **XHTTP (splitHTTP)** 传输支持（分享链接导入导出、编辑界面、sing-box 内核移植自 hiddify-sing-box，行为兼容 Xray，支持 `pcs`/`pinSHA256` 证书锁定，可连接自签证书服务器）。> **Releases: https://github.com/AL4AL/nekoray/releases**
+
 Qt based cross-platform GUI proxy configuration manager (backend: sing-box)
 
 Support Windows / Linux out of the box now.
@@ -14,13 +16,15 @@ Support Windows / Linux out of the box now.
 
 便携格式，无安装器。转到 Releases 下载预编译的二进制文件，解压后即可使用。
 
-[![GitHub All Releases](https://img.shields.io/github/downloads/Matsuridayo/nekoray/total?label=downloads-total&logo=github&style=flat-square)](https://github.com/Matsuridayo/nekoray/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/AL4AL/nekoray/total?label=downloads-total&logo=github&style=flat-square)](https://github.com/AL4AL/nekoray/releases)
 
-[下载 / Download](https://github.com/Matsuridayo/nekoray/releases)
+[下载 / Download](https://github.com/AL4AL/nekoray/releases)
 
 [安装包的说明，如果你不知道要下载哪一个](https://github.com/MatsuriDayo/nekoray/wiki/Installation-package-description)
 
-### Package
+### Upstream packages / 上游软件包管理
+
+以下打包自原版仓库 / built from the original repository:
 
 #### AUR
 
@@ -38,7 +42,7 @@ Support Windows / Linux out of the box now.
 
 ## 更改记录 & 发布频道 / Changelog & Telegram Channel
 
-https://t.me/Matsuridayo
+上游 / Upstream: https://t.me/Matsuridayo
 
 ## 项目主页 & 文档 / Homepage & Documents
 
@@ -58,6 +62,7 @@ https://matsuridayo.github.io
 - Custom Outbound
 - Custom Config
 - Custom Core
+- XHTTP / splitHTTP transport (added by AL4AL)
 
 ## 订阅 / Subscription
 
