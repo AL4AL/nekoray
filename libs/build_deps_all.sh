@@ -48,7 +48,9 @@ cd yaml-*
 mkdir -p build
 cd build
 
-$cmake .. -GNinja -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
+# CMAKE_POLICY_VERSION_MINIMUM: ignored by CMake < 4; lets CMake 4 (windows-2025
+# runner) configure old deps that declare cmake_minimum_required < 3.5
+$cmake .. -GNinja -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 ninja && ninja install
 
 cd ../..
