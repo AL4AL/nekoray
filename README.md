@@ -43,13 +43,8 @@ Support Windows / Linux out of the box now.
 
 #### AUR
 
-- [nekoray](https://aur.archlinux.org/packages/nekoray)
-- [nekoray-git](https://aur.archlinux.org/packages/nekoray-git)
-
-#### archlinuxcn
-
-- [nekoray](https://github.com/archlinuxcn/repo/tree/master/archlinuxcn/nekoray)
-- [nekoray-git](https://github.com/archlinuxcn/repo/tree/master/archlinuxcn/nekoray-git)
+- [nekoray-bin](https://aur.archlinux.org/packages/nekoray-bin)（上游预编译 / upstream prebuilt）
+- [nekoray-qt6](https://aur.archlinux.org/packages/nekoray-qt6)（Qt6 变体 / Qt6 variant）
 
 #### Scoop Extras
 

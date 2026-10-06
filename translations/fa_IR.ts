@@ -1496,6 +1496,12 @@ End: %2</source>
         <source>URL Test</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Removed incompatible profiles (backups saved to the profiles_removed folder):
+%1
+To use them again, re-import them from their share links.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProxyItem</name>

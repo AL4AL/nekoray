@@ -2,7 +2,7 @@
 
 ### Debian 系发行版
 
-使用 Debian 系发行版时，推荐使用 .deb 包安装（文件名遵循 Debian 规范，如 `nekoray_4.1.1_amd64.deb`）：
+使用 Debian 系发行版时，推荐使用 .deb 包安装（文件名遵循 Debian 规范，如 `nekoray_<版本>_amd64.deb`）：
 
 ```shell
 sudo apt install ./nekoray_*_amd64.deb
@@ -17,40 +17,20 @@ sudo apt install ./nekoray_*_amd64.deb
 
 ### Arch 系发行版
 
-使用 Arch 系发行版时，推荐从 ```aur``` 或 ```archlinuxcn``` 安装：
-
-#### AUR
-##### 最新稳定版
+#### AUR（上游构建的预编译包）
 
 ```shell
-[yay/paru] -S nekoray
+[yay/paru] -S nekoray-bin     # 上游 MatsuriDayo 预编译
+[yay/paru] -S nekoray-qt6     # Qt6 变体
 ```
 
-##### 最新 Git 版 (开发版)
-
-```shell
-[yay/paru] -S nekoray-git
-```
-
-#### archlinuxcn
-
-##### 最新稳定版
-
-```shell
-sudo pacman -S nekoray
-```
-
-##### 最新 Git 版 (开发版)
-
-```shell
-sudo pacman -S nekoray-git
-```
+本仓库（AL4AL）版本请从 [Releases](https://github.com/AL4AL/nekoray/releases) 下载 .deb 或 .zip。
 
 ### 其他发行版
 
 下载 .zip 文件，解压到合适的路径，开箱即用。
 
-或下载 .AppImage，并使用 `chmod +x nekoray-*-AppImage-x64.AppImage` 给予可执行权限。
+或下载 .AppImage，并使用 `chmod +x nekoray-*-linux-x64.AppImage` 给予可执行权限。
 
 具体使用方法见下文。
 
