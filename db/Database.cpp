@@ -37,16 +37,50 @@ namespace NekoGui {
         //
         profiles = {};
         groups = {};
+        migration_removed_notice.clear();
         profilesIdOrder = filterIntJsonFile("profiles");
         groupsIdOrder = filterIntJsonFile("groups");
         // Load Proxys
         QList<int> delProfile;
+        static const QStringList supported_networks{"tcp", "ws", "http", "grpc", "httpupgrade", "quic", "xhttp"};
         for (auto id: profilesIdOrder) {
             auto ent = LoadProxyEntity(QStringLiteral("profiles/%1.json").arg(id));
             // Corrupted profile?
             if (ent == nullptr || ent->bean == nullptr || ent->bean->version == -114514) {
                 delProfile << id;
                 continue;
+            }
+            // Transport migration from older versions: legacy profile files may
+            // carry transport names the current core rejects ("unknown transport
+            // type"), which fails activation and url test with an error dialog.
+            // Rename known aliases, drop the rest (with a file backup).
+            auto stream = NekoGui_fmt::GetStreamSettings(ent->bean.get());
+            if (stream != nullptr) {
+                auto net = stream->network.trimmed().toLower();
+                bool migrated = false;
+                if (net == "splithttp") { // renamed upstream
+                    net = "xhttp";
+                    migrated = true;
+                } else if (net == "h2") {
+                    net = "http";
+                    migrated = true;
+                } else if (net.isEmpty()) {
+                    net = "tcp";
+                    migrated = true;
+                }
+                if (migrated) {
+                    stream->network = net;
+                    ent->Save();
+                    qInfo() << "nekoray: migrated legacy transport of profile" << ent->id << ent->bean->name << "->" << net;
+                }
+                if (!supported_networks.contains(net)) {
+                    QDir().mkpath("profiles_removed");
+                    QFile::copy(ent->fn, QStringLiteral("profiles_removed/%1.json").arg(id));
+                    migration_removed_notice << ent->bean->name + " (" + stream->network + ")";
+                    qWarning() << "nekoray: removing profile with unsupported transport" << ent->id << stream->network;
+                    delProfile << id;
+                    continue;
+                }
             }
             profiles[id] = ent;
         }

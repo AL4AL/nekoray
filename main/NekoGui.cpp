@@ -211,6 +211,11 @@ namespace NekoGui_ConfigItem {
             MessageBoxWarning("error", "can not open config " + fn + "\n" + file.errorString());
         } else {
             last_save_content = file.readAll();
+            QJsonParseError perr{};
+            QJsonDocument::fromJson(last_save_content, &perr);
+            if (perr.error != perr.NoError) {
+                qDebug() << "ParseErrorIn" << fn << perr.errorString();
+            }
             FromJsonBytes(last_save_content);
         }
 

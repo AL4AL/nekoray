@@ -3,6 +3,10 @@
 
 namespace NekoGui_fmt {
     void V2rayStreamSettings::BuildStreamSettingsSingBox(QJsonObject *outbound) {
+        // legacy transport names that older versions could store
+        if (network == "splithttp") network = "xhttp"; // renamed upstream
+        else if (network == "h2") network = "http";
+
         // https://sing-box.sagernet.org/configuration/shared/v2ray-transport
 
         if (network != "tcp") {

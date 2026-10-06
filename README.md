@@ -34,6 +34,7 @@ Support Windows / Linux out of the box now.
 
 - 用户数据始终在 `~/.config/nekoray/`，升级不会改动、不会丢失。/ all data lives in `~/.config/nekoray/` and is never touched.
 - 旧版本若把配置留在了程序目录（非 `-appdata` 运行），新版本首次启动会自动导入到 `~/.config/nekoray/`（原文件保留）。/ config left next to older binaries is imported automatically on first start; originals are kept.
+- 旧版本导入的 xhttp/splithttp 传输配置会在启动时自动改名为 `xhttp`；无法被当前内核支持的传输（如 `kcp`）的配置会在首次启动时移出列表（备份到 `config/profiles_removed/`），请重新导入其分享链接。/ legacy `splithttp` stream settings are renamed to `xhttp` automatically at startup; profiles using transports the core cannot run (e.g. `kcp`) are moved to `config/profiles_removed/` with a log notice — re-import their share links instead.
 - Debian/Ubuntu: `sudo apt install ./nekoray_*_amd64.deb` 直接覆盖升级；桌面图标改为 hicolor 主题安装，修复 Ubuntu 24.04 / GNOME 46 图标不显示问题。/ the .deb now ships its own desktop entry and hicolor icons (fixes the missing icon on Ubuntu 24.04).
 
 ### Upstream packages / 上游软件包管理

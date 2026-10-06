@@ -12,6 +12,9 @@ namespace NekoGui {
         // order -> id
         QList<int> groupsTabOrder;
 
+        // display names of profiles dropped by LoadManager (unsupported transport)
+        QStringList migration_removed_notice;
+
         // Manager
 
         std::map<int, std::shared_ptr<ProxyEntity>> profiles;

@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Setup misc UI
     themeManager->ApplyTheme(NekoGui::dataStore->theme);
     ui->setupUi(this);
+
     //
     connect(ui->menu_start, &QAction::triggered, this, [=]() { neko_start(); });
     connect(ui->menu_stop, &QAction::triggered, this, [=]() { neko_stop(); });
@@ -138,6 +139,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     MW_show_log_ext_vt100 = [=](const QString &log) {
         runOnUiThread([=] { show_log_impl(cleanVT100String(log)); });
     };
+
+    // One-time notice about profiles dropped by LoadManager
+    if (!NekoGui::profileManager->migration_removed_notice.isEmpty()) {
+        auto names = NekoGui::profileManager->migration_removed_notice.join("\n");
+        NekoGui::profileManager->migration_removed_notice.clear();
+        MW_show_log(tr("Removed incompatible profiles (backups saved to the profiles_removed folder):\n%1\nTo use them again, re-import them from their share links.").arg(names));
+    }
 
     // table UI
     ui->proxyListTable->callback_save_order = [=] {
