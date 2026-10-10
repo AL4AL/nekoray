@@ -16,6 +16,25 @@ Support Windows / Linux out of the box now.
 
 目前支持 Windows / Linux 开箱即用
 
+## Why this fork / 为什么有这个分支
+
+The original [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) was **archived on 2025-03-17** and is read-only. This fork keeps it building and usable on current systems, and adds XHTTP support. It is an **unofficial continuation by [AL4AL](https://github.com/AL4AL)** — not affiliated with, nor endorsed by, the original authors.
+
+原仓库已于 2025-03-17 归档只读。本分支由 AL4AL 非官方维护，与原作者无关。
+
+### What's different from upstream 4.0.1 / 相对上游 4.0.1 的改进
+
+| | Upstream 4.0.1 | This fork |
+|---|---|---|
+| XHTTP / splitHTTP transport | — | import/export, edit dialog, core port (Xray-compatible HTTP-version + `pcs` cert pinning) |
+| Old configs (`splithttp`, `kcp`, …) | activation fails | auto-repaired / safely set aside at startup |
+| Upgrading an old install | manual | auto-import of configs left next to the binary; unwritable `/opt` falls back to appdata |
+| Debian package | broken on Ubuntu 24.04 (icons, root perms) | modern packaging, works out of the box |
+| In-app update check | points at the archived repo | points at this fork's releases |
+| Builds | CI broken on current runners | fixed CI, releases for Linux + Windows |
+
+Full details: [CHANGELOG.md](CHANGELOG.md) · 全部改动见 [CHANGELOG.md](CHANGELOG.md)
+
 ## 下载 / Download
 
 ### GitHub Releases (Portable ZIP)
@@ -27,6 +46,16 @@ Support Windows / Linux out of the box now.
 [下载 / Download](https://github.com/AL4AL/nekoray/releases)
 
 [安装包的说明，如果你不知道要下载哪一个](https://github.com/MatsuriDayo/nekoray/wiki/Installation-package-description)
+
+### Verify downloads / 校验下载文件
+
+每个 Release 附带 `SHA256SUMS`，请在运行前校验 / each release ships a `SHA256SUMS` file — check it before running:
+
+```bash
+sha256sum -c SHA256SUMS --ignore-missing
+```
+
+Release binaries are built by the public CI workflow [`build-nekoray-cmake.yml`](.github/workflows/build-nekoray-cmake.yml) (CMake + Ninja + Qt5, core built from the pinned sources) — you can inspect the entire build process and reproduce it from the tagged commit.
 
 ### 升级 / Upgrading
 
@@ -50,13 +79,14 @@ Support Windows / Linux out of the box now.
 
 `scoop install nekoray`
 
-## 更改记录 & 发布频道 / Changelog & Telegram Channel
+## 更改记录 & 发布频道 / Changelog & Releases
 
-上游 / Upstream: https://t.me/Matsuridayo
+- 本分支 / this fork: [CHANGELOG.md](CHANGELOG.md) · [Releases](https://github.com/AL4AL/nekoray/releases)
+- 上游公告 / upstream channel: https://t.me/Matsuridayo (frozen)
 
 ## 项目主页 & 文档 / Homepage & Documents
 
-https://matsuridayo.github.io
+上游文档 / upstream documentation: https://matsuridayo.github.io
 
 ## 代理 / Proxy
 
@@ -97,11 +127,7 @@ https://matsuridayo.github.io
 
 ## 捐助 / Donate
 
-如果这个项目对您有帮助，可以通过捐赠的方式帮助我们维持这个项目。
-
-捐赠满等额 50 USD 可以在「[捐赠榜](https://mtrdnt.pages.dev/donation_list)」显示头像，如果您未被添加到这里，欢迎联系我们补充。
-
-Donations of 50 USD or more can display your avatar on the [Donation List](https://mtrdnt.pages.dev/donation_list). If you are not added here, please contact us to add it.
+以下收款地址属于**原上游项目作者**，与本分支无关，仅作保留展示 / the addresses below belong to the **upstream project authors**, not to this fork; kept here for reference only:
 
 USDT TRC20
 
