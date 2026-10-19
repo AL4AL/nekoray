@@ -2,6 +2,10 @@
 
 All notable changes in this fork (base: upstream `MatsuriDayo/nekoray` 4.0.1, which is archived and read-only since 2025-03-17).
 
+## 4.1.3 — 2026-10-20
+
+- **Simple Route beginner guidance**: placeholders and a short hint on the Simple Route tab, plus **Add rule…** (guided form) and **Input formats** help that explain domain/IP syntax and that `*` alone is not a wildcard.
+
 ## 4.1.2 — 2026-10-06
 
 - **XHTTP legacy-config repair at startup**: profiles stored with old stream names (`splithttp`, `h2`, empty) are renamed automatically; profiles using transports the core cannot run (e.g. `kcp`) are moved to `config/profiles_removed/` with a log notice instead of failing activation with `LoadConfig return error`. Re-import their share links to restore them.

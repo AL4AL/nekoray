@@ -6,10 +6,15 @@
 #include "main/GuiUtils.hpp"
 #include "fmt/Preset.hpp"
 
+#include <QComboBox>
+#include <QDialogButtonBox>
 #include <QFile>
-#include <QMessageBox>
-#include <QListWidget>
+#include <QGridLayout>
+#include <QLabel>
 #include <QLineEdit>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QVBoxLayout>
 
 #define REFRESH_ACTIVE_ROUTING(name, obj)           \
     this->active_routing = name;                    \
@@ -83,6 +88,24 @@ DialogManageRoutes::DialogManageRoutes(QWidget *parent) : QDialog(parent), ui(ne
     ui->directIPLayout->addWidget(directIPTxt, 0, 0);
     ui->proxyIPLayout->addWidget(proxyIPTxt, 0, 0);
     ui->blockIPLayout->addWidget(blockIPTxt, 0, 0);
+    //
+    const auto domainPlaceholder = tr(
+        "example.com\n"
+        "full:www.example.com\n"
+        "keyword:ads\n"
+        "regexp:^ads\\..+\n"
+        "geosite:cn");
+    const auto ipPlaceholder = tr(
+        "1.2.3.4\n"
+        "10.0.0.0/8\n"
+        "geoip:cn\n"
+        "geoip:private");
+    directDomainTxt->setPlaceholderText(domainPlaceholder);
+    proxyDomainTxt->setPlaceholderText(domainPlaceholder);
+    blockDomainTxt->setPlaceholderText(domainPlaceholder);
+    directIPTxt->setPlaceholderText(ipPlaceholder);
+    proxyIPTxt->setPlaceholderText(ipPlaceholder);
+    blockIPTxt->setPlaceholderText(ipPlaceholder);
     //
     REFRESH_ACTIVE_ROUTING(NekoGui::dataStore->active_routing, NekoGui::dataStore->routing.get())
 
@@ -246,6 +269,193 @@ void DialogManageRoutes::on_load_save_clicked() {
         lineEdit->setText(item->text());
         emit load->clicked();
     });
+    w->exec();
+    w->deleteLater();
+}
+
+void DialogManageRoutes::on_route_input_help_clicked() {
+    MessageBoxInfo(tr("Simple Route — input formats"), tr(
+        "One rule per line. Lines that start with # are comments.\n"
+        "\n"
+        "Domain rules:\n"
+        "  example.com\n"
+        "      Matches example.com and every subdomain (www.example.com, a.b.example.com, …).\n"
+        "      Same as domain:example.com. Type the name only — no *.\n"
+        "  full:www.example.com\n"
+        "      Exact host only; subdomains are not included.\n"
+        "  keyword:ads\n"
+        "      Matches if the domain contains that text anywhere.\n"
+        "  regexp:^ads\\..+\n"
+        "      Regular expression. Use .* for \"any characters\", not a shell-style *.\n"
+        "  geosite:cn\n"
+        "      Geosite category (the boxes also autocomplete these).\n"
+        "\n"
+        "IP rules:\n"
+        "  1.2.3.4\n"
+        "      One IPv4 or IPv6 address.\n"
+        "  10.0.0.0/8\n"
+        "      CIDR range (how you match many addresses at once).\n"
+        "  geoip:cn / geoip:private\n"
+        "      GeoIP code (autocomplete in the boxes).\n"
+        "\n"
+        "About *:\n"
+        "  Don't use * alone, and don't write *.example.com.\n"
+        "  For all subdomains, type example.com.\n"
+        "  For a partial domain match, use keyword: or regexp:.\n"
+        "  For IP ranges, use CIDR (for example 0.0.0.0/0 for all IPv4)."));
+}
+
+void DialogManageRoutes::on_add_route_rule_clicked() {
+    auto w = new QDialog(this);
+    w->setWindowTitle(tr("Add route rule"));
+    w->setMinimumWidth(420);
+    auto layout = new QGridLayout;
+    w->setLayout(layout);
+    auto row = -1;
+    //
+    auto outbound_l = new QLabel(tr("Send to"));
+    auto outbound = new QComboBox;
+    outbound->addItem(tr("Direct (bypass)"), "direct");
+    outbound->addItem(tr("Proxy"), "proxy");
+    outbound->addItem(tr("Block"), "block");
+    layout->addWidget(outbound_l, ++row, 0);
+    layout->addWidget(outbound, row, 1);
+    //
+    auto kind_l = new QLabel(tr("Rule type"));
+    auto kind = new QComboBox;
+    kind->addItem(tr("Domain"), "domain");
+    kind->addItem(tr("IP"), "ip");
+    layout->addWidget(kind_l, ++row, 0);
+    layout->addWidget(kind, row, 1);
+    //
+    auto matchType_l = new QLabel(tr("Match as"));
+    auto matchType = new QComboBox;
+    layout->addWidget(matchType_l, ++row, 0);
+    layout->addWidget(matchType, row, 1);
+    //
+    auto value_l = new QLabel(tr("Value"));
+    auto value = new QLineEdit;
+    layout->addWidget(value_l, ++row, 0);
+    layout->addWidget(value, row, 1);
+    //
+    auto hint = new QLabel;
+    hint->setWordWrap(true);
+    hint->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    layout->addWidget(hint, ++row, 0, 1, 2);
+    //
+    auto box = new QDialogButtonBox;
+    box->setOrientation(Qt::Horizontal);
+    box->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
+    layout->addWidget(box, ++row, 1);
+    //
+    auto refreshMatchType = [=] {
+        matchType->blockSignals(true);
+        matchType->clear();
+        if (kind->currentData().toString() == "ip") {
+            matchType->addItem(tr("IP or CIDR  (e.g. 10.0.0.0/8)"), "cidr");
+            matchType->addItem(tr("GeoIP code  (e.g. cn, private)"), "geoip");
+        } else {
+            matchType->addItem(tr("Domain suffix  (example.com + subdomains)"), "suffix");
+            matchType->addItem(tr("Exact domain  (full:)"), "full");
+            matchType->addItem(tr("Keyword  (keyword:)"), "keyword");
+            matchType->addItem(tr("Regular expression  (regexp:)"), "regexp");
+            matchType->addItem(tr("Geosite category  (geosite:)"), "geosite");
+        }
+        matchType->blockSignals(false);
+    };
+    auto refreshHint = [=] {
+        const auto m = matchType->currentData().toString();
+        if (m == "geoip") {
+            hint->setText(tr("GeoIP code only — no geoip: prefix.\nExamples: cn, private, ir"));
+            value->setPlaceholderText("cn");
+        } else if (m == "cidr") {
+            hint->setText(tr("One IP or CIDR.\nExamples: 1.2.3.4 , 10.0.0.0/8 , 2001:db8::/32"));
+            value->setPlaceholderText("10.0.0.0/8");
+        } else if (m == "full") {
+            hint->setText(tr("Exact host only — subdomains are not included.\nExample: www.example.com"));
+            value->setPlaceholderText("www.example.com");
+        } else if (m == "keyword") {
+            hint->setText(tr("Matches if the domain contains this text.\nExample: ads"));
+            value->setPlaceholderText("ads");
+        } else if (m == "regexp") {
+            hint->setText(tr("Regular expression (use .* for any characters).\nExample: ^ads\\..+"));
+            value->setPlaceholderText(R"(^ads\..+)");
+        } else if (m == "geosite") {
+            hint->setText(tr("Geosite category only — no geosite: prefix.\nExamples: cn , category-ads-all"));
+            value->setPlaceholderText("cn");
+        } else {
+            hint->setText(tr("Matches this name and every subdomain.\n"
+                             "Example: example.com → example.com, www.example.com, …\n"
+                             "Type the name only; no *."));
+            value->setPlaceholderText("example.com");
+        }
+    };
+    connect(kind, QOverload<int>::of(&QComboBox::currentIndexChanged), w, [=](int) {
+        refreshMatchType();
+        refreshHint();
+    });
+    connect(matchType, QOverload<int>::of(&QComboBox::currentIndexChanged), w, [=](int) {
+        refreshHint();
+    });
+    refreshMatchType();
+    refreshHint();
+    //
+    connect(box, &QDialogButtonBox::accepted, w, [=] {
+        auto raw = value->text().trimmed();
+        for (const auto &p: QStringList{"domain:", "full:", "keyword:", "regexp:", "geosite:", "geoip:"}) {
+            if (raw.startsWith(p, Qt::CaseInsensitive)) {
+                raw = raw.mid(p.size()).trimmed();
+                break;
+            }
+        }
+        if (raw.isEmpty()) {
+            MessageBoxWarning(tr("Add route rule"), tr("Please enter a value."));
+            value->setFocus();
+            return;
+        }
+        if (raw == "*" || raw.startsWith("*.")) {
+            MessageBoxWarning(tr("Add route rule"), tr(
+                "Don't use * alone, and don't write *.example.com.\n"
+                "For all subdomains, type example.com.\n"
+                "For a partial match, choose Keyword or Regular expression.\n"
+                "For IP ranges, use CIDR (for example 0.0.0.0/0)."));
+            value->setFocus();
+            value->selectAll();
+            return;
+        }
+        //
+        const auto m = matchType->currentData().toString();
+        QString line;
+        if (kind->currentData().toString() == "ip") {
+            line = (m == "geoip") ? ("geoip:" + raw) : raw;
+        } else if (m == "full") {
+            line = "full:" + raw;
+        } else if (m == "keyword") {
+            line = "keyword:" + raw;
+        } else if (m == "regexp") {
+            line = "regexp:" + raw;
+        } else if (m == "geosite") {
+            line = "geosite:" + raw;
+        } else {
+            line = raw; // domain suffix, same as domain:
+        }
+        //
+        const auto out = outbound->currentData().toString();
+        const bool isIP = kind->currentData().toString() == "ip";
+        AutoCompleteTextEdit *target;
+        if (out == "proxy") target = isIP ? proxyIPTxt : proxyDomainTxt;
+        else if (out == "block") target = isIP ? blockIPTxt : blockDomainTxt;
+        else target = isIP ? directIPTxt : directDomainTxt;
+        //
+        auto text = target->toPlainText();
+        if (!text.isEmpty() && !text.endsWith('\n')) text += '\n';
+        text += line;
+        target->setPlainText(text);
+        //
+        w->accept();
+    });
+    connect(box, &QDialogButtonBox::rejected, w, &QDialog::reject);
+    //
     w->exec();
     w->deleteLater();
 }

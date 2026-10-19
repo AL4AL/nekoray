@@ -31,6 +31,7 @@ The original [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) was *
 | Upgrading an old install | manual | auto-import of configs left next to the binary; unwritable `/opt` falls back to appdata |
 | Debian package | broken on Ubuntu 24.04 (icons, root perms) | modern packaging, works out of the box |
 | In-app update check | points at the archived repo | points at this fork's releases |
+| Simple Route inputs | plain text boxes only | guided **Add rule…** form, placeholders, format/wildcard help |
 | Builds | CI broken on current runners | fixed CI, releases for Linux + Windows |
 
 Full details: [CHANGELOG.md](CHANGELOG.md) · 全部改动见 [CHANGELOG.md](CHANGELOG.md)

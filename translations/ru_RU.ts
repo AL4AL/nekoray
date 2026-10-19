@@ -669,6 +669,220 @@ For more information, see the document &quot;Configuration/DNS&quot;.</source>
         <source>Final DNS Out</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>One rule per line. Use Add rule… for a guided form, or Input formats for the full list.</source>
+        <translation>Одно правило на строку. Используйте «Добавить правило…» или «Форматы ввода» для полного списка.</translation>
+    </message>
+    <message>
+        <source>Add rule…</source>
+        <translation>Добавить правило…</translation>
+    </message>
+    <message>
+        <source>Build one domain or IP rule with a short form</source>
+        <translation>Собрать правило для домена или IP с помощью короткой формы</translation>
+    </message>
+    <message>
+        <source>Input formats</source>
+        <translation>Форматы ввода</translation>
+    </message>
+    <message>
+        <source>Show accepted domain and IP formats</source>
+        <translation>Показать допустимые форматы доменов и IP</translation>
+    </message>
+    <message>
+        <source>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</source>
+        <translation>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</translation>
+    </message>
+    <message>
+        <source>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</source>
+        <translation>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</translation>
+    </message>
+    <message>
+        <source>Simple Route — input formats</source>
+        <translation>Простой маршрут — форматы ввода</translation>
+    </message>
+    <message>
+        <source>One rule per line. Lines that start with # are comments.
+
+Domain rules:
+  example.com
+      Matches example.com and every subdomain (www.example.com, a.b.example.com, …).
+      Same as domain:example.com. Type the name only — no *.
+  full:www.example.com
+      Exact host only; subdomains are not included.
+  keyword:ads
+      Matches if the domain contains that text anywhere.
+  regexp:^ads\..+
+      Regular expression. Use .* for &quot;any characters&quot;, not a shell-style *.
+  geosite:cn
+      Geosite category (the boxes also autocomplete these).
+
+IP rules:
+  1.2.3.4
+      One IPv4 or IPv6 address.
+  10.0.0.0/8
+      CIDR range (how you match many addresses at once).
+  geoip:cn / geoip:private
+      GeoIP code (autocomplete in the boxes).
+
+About *:
+  Don&apos;t use * alone, and don&apos;t write *.example.com.
+  For all subdomains, type example.com.
+  For a partial domain match, use keyword: or regexp:.
+  For IP ranges, use CIDR (for example 0.0.0.0/0 for all IPv4).</source>
+        <translation>Одно правило на строку. Строки, начинающиеся с #, — комментарии.
+
+Правила для доменов:
+  example.com
+      Совпадает с example.com и всеми поддоменами (www.example.com, a.b.example.com, …).
+      То же, что domain:example.com. Вводите только имя — без *.
+  full:www.example.com
+      Только точное имя хоста; поддомены не входят.
+  keyword:ads
+      Совпадение, если домен содержит этот текст где угодно.
+  regexp:^ads\..+
+      Регулярное выражение. Используйте .* для «любых символов», а не shell-стиль *.
+  geosite:cn
+      Категория geosite (в полях есть автодополнение).
+
+Правила для IP:
+  1.2.3.4
+      Один адрес IPv4 или IPv6.
+  10.0.0.0/8
+      Диапазон CIDR (так задают много адресов сразу).
+  geoip:cn / geoip:private
+      Код GeoIP (автодополнение в полях).
+
+Про *:
+  Не используйте * отдельно и не пишите *.example.com.
+  Для всех поддоменов введите example.com.
+  Для частичного совпадения домена используйте keyword: или regexp:.
+  Для диапазонов IP используйте CIDR (например 0.0.0.0/0 для всего IPv4).</translation>
+    </message>
+    <message>
+        <source>Add route rule</source>
+        <translation>Добавить правило маршрута</translation>
+    </message>
+    <message>
+        <source>Send to</source>
+        <translation>Отправить в</translation>
+    </message>
+    <message>
+        <source>Direct (bypass)</source>
+        <translation>Напрямую (минуя прокси)</translation>
+    </message>
+    <message>
+        <source>Rule type</source>
+        <translation>Тип правила</translation>
+    </message>
+    <message>
+        <source>Match as</source>
+        <translation>Совпадение</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Значение</translation>
+    </message>
+    <message>
+        <source>IP or CIDR  (e.g. 10.0.0.0/8)</source>
+        <translation>IP или CIDR (напр. 10.0.0.0/8)</translation>
+    </message>
+    <message>
+        <source>GeoIP code  (e.g. cn, private)</source>
+        <translation>Код GeoIP (напр. cn, private)</translation>
+    </message>
+    <message>
+        <source>Domain suffix  (example.com + subdomains)</source>
+        <translation>Суффикс домена (example.com + поддомены)</translation>
+    </message>
+    <message>
+        <source>Exact domain  (full:)</source>
+        <translation>Точный домен (full:)</translation>
+    </message>
+    <message>
+        <source>Keyword  (keyword:)</source>
+        <translation>Ключевое слово (keyword:)</translation>
+    </message>
+    <message>
+        <source>Regular expression  (regexp:)</source>
+        <translation>Регулярное выражение (regexp:)</translation>
+    </message>
+    <message>
+        <source>Geosite category  (geosite:)</source>
+        <translation>Категория geosite (geosite:)</translation>
+    </message>
+    <message>
+        <source>GeoIP code only — no geoip: prefix.
+Examples: cn, private, ir</source>
+        <translation>Только код GeoIP — без префикса geoip:.
+Примеры: cn, private, ir</translation>
+    </message>
+    <message>
+        <source>One IP or CIDR.
+Examples: 1.2.3.4 , 10.0.0.0/8 , 2001:db8::/32</source>
+        <translation>Один IP или CIDR.
+Примеры: 1.2.3.4 , 10.0.0.0/8 , 2001:db8::/32</translation>
+    </message>
+    <message>
+        <source>Exact host only — subdomains are not included.
+Example: www.example.com</source>
+        <translation>Только точный хост — поддомены не входят.
+Пример: www.example.com</translation>
+    </message>
+    <message>
+        <source>Matches if the domain contains this text.
+Example: ads</source>
+        <translation>Совпадение, если домен содержит этот текст.
+Пример: ads</translation>
+    </message>
+    <message>
+        <source>Regular expression (use .* for any characters).
+Example: ^ads\..+</source>
+        <translation>Регулярное выражение (.* — любые символы).
+Пример: ^ads\..+</translation>
+    </message>
+    <message>
+        <source>Geosite category only — no geosite: prefix.
+Examples: cn , category-ads-all</source>
+        <translation>Только категория geosite — без префикса geosite:.
+Примеры: cn , category-ads-all</translation>
+    </message>
+    <message>
+        <source>Matches this name and every subdomain.
+Example: example.com → example.com, www.example.com, …
+Type the name only; no *.</source>
+        <translation>Совпадает с этим именем и всеми поддоменами.
+Пример: example.com → example.com, www.example.com, …
+Вводите только имя; без *.</translation>
+    </message>
+    <message>
+        <source>Please enter a value.</source>
+        <translation>Введите значение.</translation>
+    </message>
+    <message>
+        <source>Don&apos;t use * alone, and don&apos;t write *.example.com.
+For all subdomains, type example.com.
+For a partial match, choose Keyword or Regular expression.
+For IP ranges, use CIDR (for example 0.0.0.0/0).</source>
+        <translation>Не используйте * отдельно и не пишите *.example.com.
+Для всех поддоменов введите example.com.
+Для частичного совпадения выберите «Ключевое слово» или «Регулярное выражение».
+Для диапазонов IP используйте CIDR (например 0.0.0.0/0).</translation>
+    </message>
 </context>
 <context>
     <name>DialogVPNSettings</name>

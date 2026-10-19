@@ -426,6 +426,52 @@ For more information, see the document &quot;Configuration/DNS&quot;.</string>
         <widget class="QGroupBox" name="gb2">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
+           <layout class="QHBoxLayout" name="simple_route_help_row">
+            <item>
+             <widget class="QLabel" name="simple_route_hint">
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>One rule per line. Use Add rule… for a guided form, or Input formats for the full list.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="add_route_rule">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Add rule…</string>
+              </property>
+              <property name="toolTip">
+               <string>Build one domain or IP rule with a short form</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="route_input_help">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Input formats</string>
+              </property>
+              <property name="toolTip">
+               <string>Show accepted domain and IP formats</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QGridLayout" name="gridLayout_3" rowstretch="0,1,1" columnstretch="0,1,1,1">
             <item row="0" column="3">
              <widget class="QLabel" name="label_82">
@@ -645,6 +691,8 @@ For more information, see the document &quot;Configuration/DNS&quot;.</string>
   <tabstop>format_dns_object</tabstop>
   <tabstop>dns_document</tabstop>
   <tabstop>dns_object</tabstop>
+  <tabstop>add_route_rule</tabstop>
+  <tabstop>route_input_help</tabstop>
   <tabstop>preset</tabstop>
   <tabstop>custom_route_edit</tabstop>
   <tabstop>def_outbound</tabstop>

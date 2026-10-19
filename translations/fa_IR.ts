@@ -670,6 +670,220 @@ For more information, see the document &quot;Configuration/DNS&quot;.</source>
         <source>Final DNS Out</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>One rule per line. Use Add rule… for a guided form, or Input formats for the full list.</source>
+        <translation>هر خط یک قاعده. از «افزودن قاعده…» برای فرم راهنما، یا «قالب‌های ورودی» برای فهرست کامل استفاده کنید.</translation>
+    </message>
+    <message>
+        <source>Add rule…</source>
+        <translation>افزودن قاعده…</translation>
+    </message>
+    <message>
+        <source>Build one domain or IP rule with a short form</source>
+        <translation>ساخت یک قاعده دامنه یا IP با فرم کوتاه</translation>
+    </message>
+    <message>
+        <source>Input formats</source>
+        <translation>قالب‌های ورودی</translation>
+    </message>
+    <message>
+        <source>Show accepted domain and IP formats</source>
+        <translation>نمایش قالب‌های پذیرفته‌شده دامنه و IP</translation>
+    </message>
+    <message>
+        <source>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</source>
+        <translation>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</translation>
+    </message>
+    <message>
+        <source>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</source>
+        <translation>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</translation>
+    </message>
+    <message>
+        <source>Simple Route — input formats</source>
+        <translation>مسیر ساده — قالب‌های ورودی</translation>
+    </message>
+    <message>
+        <source>One rule per line. Lines that start with # are comments.
+
+Domain rules:
+  example.com
+      Matches example.com and every subdomain (www.example.com, a.b.example.com, …).
+      Same as domain:example.com. Type the name only — no *.
+  full:www.example.com
+      Exact host only; subdomains are not included.
+  keyword:ads
+      Matches if the domain contains that text anywhere.
+  regexp:^ads\..+
+      Regular expression. Use .* for &quot;any characters&quot;, not a shell-style *.
+  geosite:cn
+      Geosite category (the boxes also autocomplete these).
+
+IP rules:
+  1.2.3.4
+      One IPv4 or IPv6 address.
+  10.0.0.0/8
+      CIDR range (how you match many addresses at once).
+  geoip:cn / geoip:private
+      GeoIP code (autocomplete in the boxes).
+
+About *:
+  Don&apos;t use * alone, and don&apos;t write *.example.com.
+  For all subdomains, type example.com.
+  For a partial domain match, use keyword: or regexp:.
+  For IP ranges, use CIDR (for example 0.0.0.0/0 for all IPv4).</source>
+        <translation>هر خط یک قاعده. خطوطی که با # شروع می‌شوند توضیح هستند.
+
+قواعد دامنه:
+  example.com
+      با example.com و همه زیردامنه‌ها (www.example.com، a.b.example.com و …) مطابقت دارد.
+      معادل domain:example.com. فقط نام را بنویسید — بدون *.
+  full:www.example.com
+      فقط همان میزبان دقیق؛ زیردامنه‌ها شامل نمی‌شوند.
+  keyword:ads
+      اگر دامنه در هر جایی این متن را داشته باشد مطابقت می‌کند.
+  regexp:^ads\..+
+      عبارت منظم. برای «هر کاراکتر» از .* استفاده کنید، نه * به سبک شِل.
+  geosite:cn
+      دسته geosite (جعبه‌ها تکمیل خودکار هم دارند).
+
+قواعد IP:
+  1.2.3.4
+      یک آدرس IPv4 یا IPv6.
+  10.0.0.0/8
+      بازه CIDR (برای تطبیق چند آدرس با هم).
+  geoip:cn / geoip:private
+      کد GeoIP (تکمیل خودکار در جعبه‌ها).
+
+درباره *:
+  * را به‌تنهایی به کار نبرید و *.example.com ننویسید.
+  برای همه زیردامنه‌ها example.com را بنویسید.
+  برای تطبیق جزئی دامنه از keyword: یا regexp: استفاده کنید.
+  برای بازه IP از CIDR استفاده کنید (مثلاً 0.0.0.0/0 برای همه IPv4).</translation>
+    </message>
+    <message>
+        <source>Add route rule</source>
+        <translation>افزودن قاعده مسیر</translation>
+    </message>
+    <message>
+        <source>Send to</source>
+        <translation>ارسال به</translation>
+    </message>
+    <message>
+        <source>Direct (bypass)</source>
+        <translation>مستقیم (دور زدن پروکسی)</translation>
+    </message>
+    <message>
+        <source>Rule type</source>
+        <translation>نوع قاعده</translation>
+    </message>
+    <message>
+        <source>Match as</source>
+        <translation>نحوه تطبیق</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>مقدار</translation>
+    </message>
+    <message>
+        <source>IP or CIDR  (e.g. 10.0.0.0/8)</source>
+        <translation>IP یا CIDR (مثلاً 10.0.0.0/8)</translation>
+    </message>
+    <message>
+        <source>GeoIP code  (e.g. cn, private)</source>
+        <translation>کد GeoIP (مثلاً cn، private)</translation>
+    </message>
+    <message>
+        <source>Domain suffix  (example.com + subdomains)</source>
+        <translation>پسوند دامنه (example.com + زیردامنه‌ها)</translation>
+    </message>
+    <message>
+        <source>Exact domain  (full:)</source>
+        <translation>دامنه دقیق (full:)</translation>
+    </message>
+    <message>
+        <source>Keyword  (keyword:)</source>
+        <translation>کلیدواژه (keyword:)</translation>
+    </message>
+    <message>
+        <source>Regular expression  (regexp:)</source>
+        <translation>عبارت منظم (regexp:)</translation>
+    </message>
+    <message>
+        <source>Geosite category  (geosite:)</source>
+        <translation>دسته geosite (geosite:)</translation>
+    </message>
+    <message>
+        <source>GeoIP code only — no geoip: prefix.
+Examples: cn, private, ir</source>
+        <translation>فقط کد GeoIP — بدون پیشوند geoip:.
+مثال‌ها: cn، private، ir</translation>
+    </message>
+    <message>
+        <source>One IP or CIDR.
+Examples: 1.2.3.4 , 10.0.0.0/8 , 2001:db8::/32</source>
+        <translation>یک IP یا CIDR.
+مثال‌ها: 1.2.3.4 ، 10.0.0.0/8 ، 2001:db8::/32</translation>
+    </message>
+    <message>
+        <source>Exact host only — subdomains are not included.
+Example: www.example.com</source>
+        <translation>فقط میزبان دقیق — زیردامنه‌ها شامل نمی‌شوند.
+مثال: www.example.com</translation>
+    </message>
+    <message>
+        <source>Matches if the domain contains this text.
+Example: ads</source>
+        <translation>اگر دامنه این متن را داشته باشد مطابقت می‌کند.
+مثال: ads</translation>
+    </message>
+    <message>
+        <source>Regular expression (use .* for any characters).
+Example: ^ads\..+</source>
+        <translation>عبارت منظم (برای هر کاراکتر از .* استفاده کنید).
+مثال: ^ads\..+</translation>
+    </message>
+    <message>
+        <source>Geosite category only — no geosite: prefix.
+Examples: cn , category-ads-all</source>
+        <translation>فقط نام دسته geosite — بدون پیشوند geosite:.
+مثال‌ها: cn ، category-ads-all</translation>
+    </message>
+    <message>
+        <source>Matches this name and every subdomain.
+Example: example.com → example.com, www.example.com, …
+Type the name only; no *.</source>
+        <translation>با این نام و همه زیردامنه‌ها مطابقت دارد.
+مثال: example.com → example.com، www.example.com، …
+فقط نام را بنویسید؛ بدون *.</translation>
+    </message>
+    <message>
+        <source>Please enter a value.</source>
+        <translation>لطفاً مقداری وارد کنید.</translation>
+    </message>
+    <message>
+        <source>Don&apos;t use * alone, and don&apos;t write *.example.com.
+For all subdomains, type example.com.
+For a partial match, choose Keyword or Regular expression.
+For IP ranges, use CIDR (for example 0.0.0.0/0).</source>
+        <translation>* را به‌تنهایی به کار نبرید و *.example.com ننویسید.
+برای همه زیردامنه‌ها example.com را بنویسید.
+برای تطبیق جزئی، «کلیدواژه» یا «عبارت منظم» را انتخاب کنید.
+برای بازه IP از CIDR استفاده کنید (مثلاً 0.0.0.0/0).</translation>
+    </message>
 </context>
 <context>
     <name>DialogVPNSettings</name>

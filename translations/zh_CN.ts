@@ -670,6 +670,220 @@ For more information, see the document &quot;Configuration/DNS&quot;.</source>
         <source>Final DNS Out</source>
         <translation>默认 DNS 出站</translation>
     </message>
+    <message>
+        <source>One rule per line. Use Add rule… for a guided form, or Input formats for the full list.</source>
+        <translation>每行一条规则。可用「添加规则…」向导，或查看「输入格式」了解完整说明。</translation>
+    </message>
+    <message>
+        <source>Add rule…</source>
+        <translation>添加规则…</translation>
+    </message>
+    <message>
+        <source>Build one domain or IP rule with a short form</source>
+        <translation>用简短表单添加一条域名或 IP 规则</translation>
+    </message>
+    <message>
+        <source>Input formats</source>
+        <translation>输入格式</translation>
+    </message>
+    <message>
+        <source>Show accepted domain and IP formats</source>
+        <translation>显示可用的域名与 IP 格式</translation>
+    </message>
+    <message>
+        <source>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</source>
+        <translation>example.com
+full:www.example.com
+keyword:ads
+regexp:^ads\..+
+geosite:cn</translation>
+    </message>
+    <message>
+        <source>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</source>
+        <translation>1.2.3.4
+10.0.0.0/8
+geoip:cn
+geoip:private</translation>
+    </message>
+    <message>
+        <source>Simple Route — input formats</source>
+        <translation>简单路由 — 输入格式</translation>
+    </message>
+    <message>
+        <source>One rule per line. Lines that start with # are comments.
+
+Domain rules:
+  example.com
+      Matches example.com and every subdomain (www.example.com, a.b.example.com, …).
+      Same as domain:example.com. Type the name only — no *.
+  full:www.example.com
+      Exact host only; subdomains are not included.
+  keyword:ads
+      Matches if the domain contains that text anywhere.
+  regexp:^ads\..+
+      Regular expression. Use .* for &quot;any characters&quot;, not a shell-style *.
+  geosite:cn
+      Geosite category (the boxes also autocomplete these).
+
+IP rules:
+  1.2.3.4
+      One IPv4 or IPv6 address.
+  10.0.0.0/8
+      CIDR range (how you match many addresses at once).
+  geoip:cn / geoip:private
+      GeoIP code (autocomplete in the boxes).
+
+About *:
+  Don&apos;t use * alone, and don&apos;t write *.example.com.
+  For all subdomains, type example.com.
+  For a partial domain match, use keyword: or regexp:.
+  For IP ranges, use CIDR (for example 0.0.0.0/0 for all IPv4).</source>
+        <translation>每行一条规则。以 # 开头的行为注释。
+
+域名规则：
+  example.com
+      匹配 example.com 及其所有子域名（www.example.com、a.b.example.com 等）。
+      等同于 domain:example.com。只填域名，不要写 *。
+  full:www.example.com
+      仅精确匹配该主机名，不包含子域名。
+  keyword:ads
+      域名中任意位置包含该文字即匹配。
+  regexp:^ads\..+
+      正则表达式。用 .* 表示「任意字符」，不要用 shell 风格的 *。
+  geosite:cn
+      Geosite 分类（输入框支持自动完成）。
+
+IP 规则：
+  1.2.3.4
+      单个 IPv4 或 IPv6 地址。
+  10.0.0.0/8
+      CIDR 网段（一次匹配多个地址）。
+  geoip:cn / geoip:private
+      GeoIP 代码（输入框支持自动完成）。
+
+关于 *：
+  不要单独使用 *，也不要写 *.example.com。
+  匹配所有子域名时，直接填写 example.com。
+  部分匹配域名请用 keyword: 或 regexp:。
+  IP 范围请用 CIDR（例如 0.0.0.0/0 表示全部 IPv4）。</translation>
+    </message>
+    <message>
+        <source>Add route rule</source>
+        <translation>添加路由规则</translation>
+    </message>
+    <message>
+        <source>Send to</source>
+        <translation>发送到</translation>
+    </message>
+    <message>
+        <source>Direct (bypass)</source>
+        <translation>直连（绕过代理）</translation>
+    </message>
+    <message>
+        <source>Rule type</source>
+        <translation>规则类型</translation>
+    </message>
+    <message>
+        <source>Match as</source>
+        <translation>匹配方式</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>值</translation>
+    </message>
+    <message>
+        <source>IP or CIDR  (e.g. 10.0.0.0/8)</source>
+        <translation>IP 或 CIDR（例如 10.0.0.0/8）</translation>
+    </message>
+    <message>
+        <source>GeoIP code  (e.g. cn, private)</source>
+        <translation>GeoIP 代码（例如 cn、private）</translation>
+    </message>
+    <message>
+        <source>Domain suffix  (example.com + subdomains)</source>
+        <translation>域名后缀（example.com 及其子域名）</translation>
+    </message>
+    <message>
+        <source>Exact domain  (full:)</source>
+        <translation>精确域名（full:）</translation>
+    </message>
+    <message>
+        <source>Keyword  (keyword:)</source>
+        <translation>关键词（keyword:）</translation>
+    </message>
+    <message>
+        <source>Regular expression  (regexp:)</source>
+        <translation>正则表达式（regexp:）</translation>
+    </message>
+    <message>
+        <source>Geosite category  (geosite:)</source>
+        <translation>Geosite 分类（geosite:）</translation>
+    </message>
+    <message>
+        <source>GeoIP code only — no geoip: prefix.
+Examples: cn, private, ir</source>
+        <translation>只填写 GeoIP 代码，不要加 geoip: 前缀。
+示例：cn、private、ir</translation>
+    </message>
+    <message>
+        <source>One IP or CIDR.
+Examples: 1.2.3.4 , 10.0.0.0/8 , 2001:db8::/32</source>
+        <translation>填写一个 IP 或 CIDR。
+示例：1.2.3.4 、10.0.0.0/8 、2001:db8::/32</translation>
+    </message>
+    <message>
+        <source>Exact host only — subdomains are not included.
+Example: www.example.com</source>
+        <translation>仅精确主机名，不包含子域名。
+示例：www.example.com</translation>
+    </message>
+    <message>
+        <source>Matches if the domain contains this text.
+Example: ads</source>
+        <translation>域名包含该文字时匹配。
+示例：ads</translation>
+    </message>
+    <message>
+        <source>Regular expression (use .* for any characters).
+Example: ^ads\..+</source>
+        <translation>正则表达式（用 .* 表示任意字符）。
+示例：^ads\..+</translation>
+    </message>
+    <message>
+        <source>Geosite category only — no geosite: prefix.
+Examples: cn , category-ads-all</source>
+        <translation>只填写 Geosite 分类名，不要加 geosite: 前缀。
+示例：cn 、category-ads-all</translation>
+    </message>
+    <message>
+        <source>Matches this name and every subdomain.
+Example: example.com → example.com, www.example.com, …
+Type the name only; no *.</source>
+        <translation>匹配该名称及其所有子域名。
+示例：example.com → example.com、www.example.com …
+只填名称，不要写 *。</translation>
+    </message>
+    <message>
+        <source>Please enter a value.</source>
+        <translation>请输入内容。</translation>
+    </message>
+    <message>
+        <source>Don&apos;t use * alone, and don&apos;t write *.example.com.
+For all subdomains, type example.com.
+For a partial match, choose Keyword or Regular expression.
+For IP ranges, use CIDR (for example 0.0.0.0/0).</source>
+        <translation>不要单独使用 *，也不要写 *.example.com。
+匹配所有子域名时填写 example.com。
+部分匹配请选择「关键词」或「正则表达式」。
+IP 范围请使用 CIDR（例如 0.0.0.0/0）。</translation>
+    </message>
 </context>
 <context>
     <name>DialogVPNSettings</name>

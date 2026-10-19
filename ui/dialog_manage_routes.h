@@ -56,4 +56,8 @@ public slots:
     void SaveDisplayRouting(NekoGui::Routing *conf);
 
     void on_load_save_clicked();
+
+    void on_add_route_rule_clicked();
+
+    void on_route_input_help_clicked();
 };
