@@ -5,6 +5,7 @@ All notable changes in this fork (base: upstream `MatsuriDayo/nekoray` 4.0.1, wh
 ## 4.1.3 — 2026-10-20
 
 - **Simple Route beginner guidance**: placeholders and a short hint on the Simple Route tab, plus **Add rule…** (guided form) and **Input formats** help that explain domain/IP syntax and that `*` alone is not a wildcard.
+- **CI**: `build-nekoray-cmake.yml` now runs on every push to `main` (release tag from `nekoray_version.txt` when not supplied via dispatch).
 
 ## 4.1.2 — 2026-10-06
 

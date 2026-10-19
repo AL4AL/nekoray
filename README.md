@@ -56,7 +56,7 @@ Full details: [CHANGELOG.md](CHANGELOG.md) · 全部改动见 [CHANGELOG.md](CHA
 sha256sum -c SHA256SUMS --ignore-missing
 ```
 
-Release binaries are built by the public CI workflow [`build-nekoray-cmake.yml`](.github/workflows/build-nekoray-cmake.yml) (CMake + Ninja + Qt5, core built from the pinned sources) — you can inspect the entire build process and reproduce it from the tagged commit.
+Release binaries are built by the public CI workflow [`build-nekoray-cmake.yml`](.github/workflows/build-nekoray-cmake.yml) (CMake + Ninja + Qt5, core built from the pinned sources). It runs on every push to `main` (and on manual dispatch); the release tag defaults to `nekoray_version.txt`. You can inspect the entire build process and reproduce it from the tagged commit.
 
 ### 升级 / Upgrading
 
