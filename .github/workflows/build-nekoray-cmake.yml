@@ -49,6 +49,8 @@ jobs:
           # pinned: newer toolchains break github.com/sagernet/sing's
           # go:linkname into net (invalid reference to net.errNoSuchInterface)
           go-version: "1.22.2"
+          # no go.mod at repo root; we cache the built artifacts.tgz ourselves
+          cache: false
       - name: Build golang parts
         if: steps.cache-common.outputs.cache-hit != 'true'
         shell: bash
