@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+# 3.10+: CMake 4 warns that compatibility with < 3.10 will be removed.
+cmake_minimum_required(VERSION 3.10)
 
 project(nekobox VERSION 0.1 LANGUAGES CXX)
 

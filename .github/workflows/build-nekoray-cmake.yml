@@ -29,21 +29,22 @@ jobs:
           - cross_os: public_res
             cross_arch: public_res
       fail-fast: false
-    runs-on: ubuntu-latest
+    # Pin image: ubuntu-latest is migrating to Ubuntu 26 (runner-images#14748).
+    runs-on: ubuntu-24.04
     steps:
       - name: Checking out sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Go Status
         run: git ls-files go | xargs cat | sha1sum > go_status
       - name: Cache Common Download
         id: cache-common
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: artifacts.tgz
           key: CommonCache-${{ matrix.cross_os }}-${{ matrix.cross_arch }}-${{ hashFiles('libs/*.sh', 'patches/*.patch', 'go_status', '*.txt') }}
       - name: Install Golang
         if: steps.cache-common.outputs.cache-hit != 'true'
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           # pinned: newer toolchains break github.com/sagernet/sing's
           # go:linkname into net (invalid reference to net.errNoSuchInterface)
@@ -60,7 +61,7 @@ jobs:
         if: steps.cache-common.outputs.cache-hit != 'true'
         run: tar czvf artifacts.tgz ./deployment
       - name: Uploading Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: NekoRay-${{ github.sha }}-Common-${{ matrix.cross_os }}-${{ matrix.cross_arch }}
           path: artifacts.tgz
@@ -79,12 +80,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checking out sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: "recursive"
       - name: Install MSVC compiler
         if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        # Drop-in for ilammy/msvc-dev-cmd@v1 (still node20); this fork runs on node24.
+        uses: step-security/msvc-dev-cmd@v1
         with:
           # 14.1 is for vs2017, 14.2 is vs2019, following the upstream vcpkg build from Qv2ray-deps repo
           toolset: 14.2
@@ -97,11 +99,10 @@ jobs:
           DL_QT_VER: ${{ matrix.qt_version }}
         run: bash ./libs/download_qtsdk_win.sh
       # ========================================================================================================= 编译与 Qt 无关的依赖
-      - name: Install ninja-build tool
-        uses: seanmiddleditch/gha-setup-ninja@v3
+      # Ninja is preinstalled on GitHub-hosted runners; seanmiddleditch/gha-setup-ninja is archived (node20).
       - name: Cache Download
         id: cache-deps
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: libs/deps
           key: DepsCache-${{ matrix.platform }}-${{ matrix.arch }}-${{ hashFiles('libs/build_deps_*.sh') }}-Qt${{ matrix.qt_version }}
@@ -130,7 +131,9 @@ jobs:
           source libs/env_qtsdk.sh $PWD/qtsdk/Qt
           mkdir build
           cd build
-          cmake -GNinja -DQT_VERSION_MAJOR=6 -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
+          # POLICY_VERSION_MINIMUM: CMake 4 hard-errors on deps with cmake_minimum_required < 3.5
+          # -Wno-deprecated: silence QHotkey submodule still declaring VERSION 3.1 (< 3.10)
+          cmake -GNinja -DQT_VERSION_MAJOR=6 -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Wno-deprecated ..
           ninja -j2
           cd ..
           ./libs/deploy_windows64.sh
@@ -148,20 +151,21 @@ jobs:
         shell: bash
         run: tar czvf artifacts.tgz ./deployment
       - name: Uploading Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: NekoRay-${{ github.sha }}-${{ matrix.platform }}-${{ matrix.arch }}-Qt${{ matrix.qt_version }}
           path: artifacts.tgz
   publish:
     name: Pack & Publish Release
     if: github.event.inputs.artifact-pack != 'y'
-    runs-on: ubuntu-latest
+    # Pin image: ubuntu-latest is migrating to Ubuntu 26 (runner-images#14748).
+    runs-on: ubuntu-24.04
     needs:
       - build-cpp
       - build-go
     steps:
       - name: Checking out sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Resolve release tag
         id: ver
         run: |
@@ -176,7 +180,7 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Using release tag: $TAG"
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: download-artifact
       - name: Pack
@@ -225,7 +229,7 @@ jobs:
           rm -rf public_res
           rm -rf *.pdb
       - name: Uploading Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Deployment-${{ github.sha }}
           path: deployment
