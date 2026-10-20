@@ -32,7 +32,7 @@ The original [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) was *
 | Debian package | broken on Ubuntu 24.04 (icons, root perms) | modern packaging, works out of the box |
 | In-app update check | points at the archived repo | points at this fork's releases |
 | Simple Route inputs | plain text boxes only | guided **Add rule…** form, placeholders, format/wildcard help |
-| Huge free-list subscriptions | UI freezes / import can stop early on embedded NUL | progress dialog, chunked import, sanitize binary junk in bodies |
+| Huge free-list subscriptions | UI freezes / import can stop early on embedded NUL | progress dialog (suppressed while in tray), chunked import, sanitize binary junk in bodies |
 | Builds | CI broken on current runners | fixed CI, releases for Linux + Windows |
 
 Full details: [CHANGELOG.md](CHANGELOG.md) · 全部改动见 [CHANGELOG.md](CHANGELOG.md)

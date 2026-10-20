@@ -9,6 +9,7 @@
 #include <QTime>
 #include <QTableWidgetItem>
 #include <QKeyEvent>
+#include <QHideEvent>
 #include <QSystemTrayIcon>
 #include <QProcess>
 #include <QTextDocument>
@@ -178,6 +179,8 @@ private:
     void keyPressEvent(QKeyEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;
+
+    void hideEvent(QHideEvent *event) override;
 
     //
 

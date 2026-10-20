@@ -458,6 +458,14 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     }
 }
 
+void MainWindow::hideEvent(QHideEvent *event) {
+    QMainWindow::hideEvent(event);
+    // WindowModal progress dialogs stay on screen after the parent is hidden to tray.
+    if (sub_import_progress != nullptr) {
+        sub_import_progress->hide();
+    }
+}
+
 MainWindow::~MainWindow() {
     delete ui;
 }
@@ -953,6 +961,10 @@ void MainWindow::set_subscription_import_progress(int current, int total, const 
             sub_import_progress->hide();
             sub_import_progress->reset();
         }
+        return;
+    }
+    // Auto-updates (and tray-menu updates) must not pop a modal dialog over the desktop.
+    if (!isVisible()) {
         return;
     }
     if (sub_import_progress == nullptr) {

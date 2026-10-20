@@ -2,6 +2,10 @@
 
 All notable changes in this fork (base: upstream `MatsuriDayo/nekoray` 4.0.1, which is archived and read-only since 2025-03-17).
 
+## 4.1.5 — 2026-10-20
+
+- **Subscription progress stays quiet in the tray**: the download/import progress dialog is not shown while the main window is hidden (auto-update or tray-menu update), and any open progress dialog is dismissed when the window is minimized to the tray. Restoring the window mid-update still shows progress on the next update.
+
 ## 4.1.4 — 2026-10-20
 
 - **Large subscription imports**: show a progress dialog (download → parse → import N/M → apply → refresh) so the UI stays responsive on multi-thousand-line lists; process share-link lines in chunks on the existing worker thread.
