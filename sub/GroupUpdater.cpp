@@ -646,7 +646,7 @@ namespace NekoGui_sub {
                 group->Save();
 
                 // cleanup
-                QSet<int> keepIds = QSet<int>::fromList(group->order);
+                QSet<int> keepIds(group->order.begin(), group->order.end());
                 for (const auto &ent: out_all) {
                     if (!keepIds.contains(ent->id)) {
                         NekoGui::profileManager->DeleteProfile(ent->id);
