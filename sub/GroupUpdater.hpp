@@ -2,6 +2,8 @@
 
 #include "db/Database.hpp"
 
+#include <functional>
+
 namespace NekoGui_sub {
     class RawUpdater {
     public:
@@ -12,6 +14,11 @@ namespace NekoGui_sub {
         int gid_add_to = -1; // 导入到指定组 -1 为当前选中组
 
         QList<std::shared_ptr<NekoGui::ProxyEntity>> updated_order; // 新增的配置，按照导入时处理的先后排序
+
+        // Invoked from the import worker thread; keep it cheap (e.g. emit a queued signal).
+        std::function<void(int current, int total)> on_progress;
+
+        void reportProgress(int current, int total) const;
     };
 
     class GroupUpdater : public QObject {
@@ -25,6 +32,9 @@ namespace NekoGui_sub {
     signals:
 
         void asyncUpdateCallback(int gid);
+
+        // total==0 => indeterminate; current<0 => hide progress UI
+        void importProgress(int current, int total, const QString &text);
     };
 
     extern GroupUpdater *groupUpdater;

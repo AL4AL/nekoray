@@ -47,6 +47,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QFileInfo>
+#include <QProgressDialog>
 
 void UI_InitMainWindow() {
     mainwindow = new MainWindow;
@@ -105,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->toolButton_ads, &QToolButton::clicked, this, [=] { QDesktopServices::openUrl(QUrl("https://neko-box.pages.dev/喵")); });
     connect(ui->toolButton_update, &QToolButton::clicked, this, [=] { runOnNewThread([=] { CheckUpdate(); }); });
     connect(ui->toolButton_url_test, &QToolButton::clicked, this, [=] { speedtest_current_group(1, true); });
+    connect(NekoGui_sub::groupUpdater, &NekoGui_sub::GroupUpdater::importProgress, this, &MainWindow::set_subscription_import_progress);
 
     // Setup log UI
     ui->splitter->restoreState(DecodeB64IfValid(NekoGui::dataStore->splitter_state));
@@ -581,6 +583,7 @@ void MainWindow::dialog_message_impl(const QString &sender, const QString &info)
     } else if (sender == "SubUpdater") {
         if (info.startsWith("finish")) {
             refresh_proxy_list();
+            set_subscription_import_progress(-1, -1, {});
             if (!info.contains("dingyue")) {
                 show_log_impl(tr("Imported %1 profile(s)").arg(NekoGui::dataStore->imported_count));
             }
@@ -944,20 +947,49 @@ void MainWindow::refresh_proxy_list(const int &id) {
     refresh_proxy_list_impl(id, {});
 }
 
+void MainWindow::set_subscription_import_progress(int current, int total, const QString &text) {
+    if (current < 0) {
+        if (sub_import_progress != nullptr) {
+            sub_import_progress->hide();
+            sub_import_progress->reset();
+        }
+        return;
+    }
+    if (sub_import_progress == nullptr) {
+        sub_import_progress = new QProgressDialog(this);
+        sub_import_progress->setWindowTitle(tr("Subscription"));
+        sub_import_progress->setCancelButton(nullptr);
+        sub_import_progress->setWindowModality(Qt::WindowModal);
+        sub_import_progress->setMinimumDuration(0);
+        sub_import_progress->setAutoClose(false);
+        sub_import_progress->setAutoReset(false);
+        sub_import_progress->setMinimumWidth(360);
+    }
+    sub_import_progress->setLabelText(text);
+    if (total <= 0) {
+        sub_import_progress->setRange(0, 0); // indeterminate
+    } else {
+        sub_import_progress->setRange(0, total);
+        sub_import_progress->setValue(qBound(0, current, total));
+    }
+    if (!sub_import_progress->isVisible()) {
+        sub_import_progress->show();
+    }
+}
+
 void MainWindow::refresh_proxy_list_impl(const int &id, GroupSortAction groupSortAction) {
     // id < 0 重绘
     if (id < 0) {
-        // 清空数据
+        ui->proxyListTable->setUpdatesEnabled(false);
+        // 清空数据 + bulk allocate (insertRow-per-profile freezes on huge subscriptions)
         ui->proxyListTable->row2Id.clear();
-        ui->proxyListTable->setRowCount(0);
-        // 添加行
-        int row = -1;
-        for (const auto &[id, profile]: NekoGui::profileManager->profiles) {
+        QList<int> ids;
+        for (const auto &[pid, profile]: NekoGui::profileManager->profiles) {
             if (NekoGui::dataStore->current_group != profile->gid) continue;
-            row++;
-            ui->proxyListTable->insertRow(row);
-            ui->proxyListTable->row2Id += id;
+            ids += pid;
         }
+        ui->proxyListTable->setRowCount(ids.size());
+        ui->proxyListTable->row2Id = ids;
     }
 
     // 显示排序
@@ -965,8 +997,9 @@ void MainWindow::refresh_proxy_list_impl(const int &id, GroupSortAction groupSor
         switch (groupSortAction.method) {
             case GroupSortMethod::Raw: {
                 auto group = NekoGui::profileManager->CurrentGroup();
-                if (group == nullptr) return;
-                ui->proxyListTable->order = group->order;
+                if (group != nullptr) {
+                    ui->proxyListTable->order = group->order;
+                }
                 break;
             }
             case GroupSortMethod::ById: {
@@ -1030,6 +1063,9 @@ void MainWindow::refresh_proxy_list_impl(const int &id, GroupSortAction groupSor
 
     // refresh data
     refresh_proxy_list_impl_refresh_data(id);
+    if (id < 0) {
+        ui->proxyListTable->setUpdatesEnabled(true);
+    }
 }
 
 void MainWindow::refresh_proxy_list_impl_refresh_data(const int &id) {

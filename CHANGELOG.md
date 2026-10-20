@@ -2,6 +2,12 @@
 
 All notable changes in this fork (base: upstream `MatsuriDayo/nekoray` 4.0.1, which is archived and read-only since 2025-03-17).
 
+## 4.1.4 — 2026-10-20
+
+- **Large subscription imports**: show a progress dialog (download → parse → import N/M → apply → refresh) so the UI stays responsive on multi-thousand-line lists; process share-link lines in chunks on the existing worker thread.
+- **Subscription body sanitization**: Qt5 `QString(QByteArray)` stops at the first NUL, which truncated free-list subscriptions that embed binary junk in a query (e.g. a corrupted `prefix=`). Bodies are now converted with an explicit length and C0 controls (except `\n`/`\r`/`\t`) are stripped before parsing.
+- **Faster finish path for huge groups**: cap change-log listings, O(1) cleanup membership checks, bulk `setRowCount` when redrawing the proxy table (avoids per-row `insertRow` freezes).
+
 ## 4.1.3 — 2026-10-20
 
 - **Simple Route beginner guidance**: placeholders and a short hint on the Simple Route tab, plus **Add rule…** (guided form) and **Input formats** help that explain domain/IP syntax and that `*` alone is not a wildcard.

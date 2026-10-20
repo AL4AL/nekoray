@@ -1,5 +1,7 @@
 #include "ProfileFilter.hpp"
 
+#include <QSet>
+
 namespace NekoGui {
 
     QString ProfileFilter_ent_key(const std::shared_ptr<NekoGui::ProxyEntity> &ent, bool by_address) {
@@ -67,8 +69,13 @@ namespace NekoGui {
     void ProfileFilter::OnlyInSrc_ByPointer(const QList<std::shared_ptr<ProxyEntity>> &src,
                                             const QList<std::shared_ptr<ProxyEntity>> &dst,
                                             QList<std::shared_ptr<ProxyEntity>> &out) {
+        QSet<ProxyEntity *> dstSet;
+        dstSet.reserve(dst.size());
+        for (const auto &ent: dst) {
+            dstSet.insert(ent.get());
+        }
         for (const auto &ent: src) {
-            if (!dst.contains(ent)) out += ent;
+            if (!dstSet.contains(ent.get())) out += ent;
         }
     }
 

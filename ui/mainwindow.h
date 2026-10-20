@@ -15,6 +15,7 @@
 #include <QShortcut>
 #include <QSemaphore>
 #include <QMutex>
+#include <QProgressDialog>
 
 #include "GroupSort.hpp"
 
@@ -160,6 +161,9 @@ private:
     QMutex mu_exit;
     QSemaphore sem_stopped;
     int exit_reason = 0;
+    QProgressDialog *sub_import_progress = nullptr;
+
+    void set_subscription_import_progress(int current, int total, const QString &text);
 
     QList<std::shared_ptr<NekoGui::ProxyEntity>> get_now_selected_list();
 

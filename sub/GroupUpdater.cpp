@@ -6,7 +6,9 @@
 #include "GroupUpdater.hpp"
 
 #include <QInputDialog>
+#include <QThread>
 #include <QUrlQuery>
+#include <QSet>
 
 #ifndef NKR_NO_YAML
 
@@ -17,6 +19,20 @@
 namespace NekoGui_sub {
 
     GroupUpdater *groupUpdater = new GroupUpdater;
+
+    // QString::QString(QByteArray) / operator=(QByteArray) stop at the first NUL (Qt5),
+    // which truncates the rest of a subscription body. Share-link lists are text; drop
+    // other C0 controls too so a corrupted query value cannot poison QUrl parsing.
+    QString SubscriptionBodyToString(const QByteArray &bytes) {
+        QByteArray cleaned;
+        cleaned.reserve(bytes.size());
+        for (unsigned char ch: bytes) {
+            if (ch == '\n' || ch == '\r' || ch == '\t' || ch >= 0x20) {
+                cleaned.append(char(ch));
+            }
+        }
+        return QString::fromUtf8(cleaned.constData(), cleaned.size());
+    }
 
     void RawUpdater_FixEnt(const std::shared_ptr<NekoGui::ProxyEntity> &ent) {
         if (ent == nullptr) return;
@@ -34,10 +50,17 @@ namespace NekoGui_sub {
         }
     }
 
+    void RawUpdater::reportProgress(int current, int total) const {
+        if (!on_progress) return;
+        on_progress(current, total);
+        // Let the UI thread drain queued progress events; keep the worker from monopolizing the CPU.
+        QThread::msleep(0);
+    }
+
     void RawUpdater::update(const QString &str) {
         // Base64 encoded subscription
         if (auto str2 = DecodeB64IfValid(str); !str2.isEmpty()) {
-            update(str2);
+            update(SubscriptionBodyToString(str2));
             return;
         }
 
@@ -47,11 +70,16 @@ namespace NekoGui_sub {
             return;
         }
 
-        // Multi line
+        // Multi line — process in chunks so progress can update and the UI stays alive
         if (str.count("\n") > 0) {
             auto list = str.split("\n");
-            for (const auto &str2: list) {
-                update(str2.trimmed());
+            const int total = list.size();
+            constexpr int kProgressEvery = 64;
+            for (int i = 0; i < total; i++) {
+                update(list[i].trimmed());
+                if ((i % kProgressEvery) == 0 || i + 1 == total) {
+                    reportProgress(i + 1, total);
+                }
             }
             return;
         }
@@ -215,6 +243,9 @@ namespace NekoGui_sub {
 #ifndef NKR_NO_YAML
         try {
             auto proxies = YAML::Load(str.toStdString())["proxies"];
+            const int total = proxies.IsSequence() ? (int) proxies.size() : 0;
+            int index = 0;
+            constexpr int kProgressEvery = 64;
             for (auto proxy: proxies) {
                 auto type = Node2QString(proxy["type"]).toLower();
                 auto type_clash = type;
@@ -452,6 +483,11 @@ namespace NekoGui_sub {
                 if (needFix) RawUpdater_FixEnt(ent);
                 NekoGui::profileManager->AddProfile(ent, gid_add_to);
                 updated_order += ent;
+
+                index++;
+                if (total > 0 && ((index % kProgressEvery) == 0 || index == total)) {
+                    reportProgress(index, total);
+                }
             }
         } catch (const YAML::Exception &ex) {
             runOnUiThread([=] {
@@ -499,11 +535,27 @@ namespace NekoGui_sub {
         });
     }
 
+    QString FormatProfileChangeLines(const QString &prefix, const QList<std::shared_ptr<NekoGui::ProxyEntity>> &ents, int limit = 40) {
+        QString text;
+        const int n = ents.size();
+        const int shown = qMin(n, limit);
+        for (int i = 0; i < shown; i++) {
+            text += prefix + ents[i]->bean->DisplayTypeAndName() + "\n";
+        }
+        if (n > shown) {
+            text += QObject::tr("... and %1 more\n").arg(n - shown);
+        }
+        return text;
+    }
+
     void GroupUpdater::Update(const QString &_str, int _sub_gid, bool _not_sub_as_url) {
         // 创建 rawUpdater
         NekoGui::dataStore->imported_count = 0;
         auto rawUpdater = std::make_unique<RawUpdater>();
         rawUpdater->gid_add_to = _sub_gid;
+        rawUpdater->on_progress = [this](int current, int total) {
+            emit importProgress(current, total, QObject::tr("Importing profiles... %1/%2").arg(current).arg(total));
+        };
 
         // 准备
         QString sub_user_info;
@@ -515,15 +567,17 @@ namespace NekoGui_sub {
         // 网络请求
         if (asURL) {
             auto groupName = group == nullptr ? content : group->name;
+            emit importProgress(0, 0, QObject::tr("Downloading subscription..."));
             MW_show_log(">>>>>>>> " + QObject::tr("Requesting subscription: %1").arg(groupName));
 
             auto resp = NetworkRequestHelper::HttpGet(content);
             if (!resp.error.isEmpty()) {
+                emit importProgress(-1, -1, {});
                 MW_show_log("<<<<<<<< " + QObject::tr("Requesting subscription %1 error: %2").arg(groupName, resp.error + "\n" + resp.data));
                 return;
             }
 
-            content = resp.data;
+            content = SubscriptionBodyToString(resp.data);
             sub_user_info = NetworkRequestHelper::GetHeader(resp.header, "Subscription-UserInfo");
 
             MW_show_log("<<<<<<<< " + QObject::tr("Subscription request fininshed: %1").arg(groupName));
@@ -553,19 +607,20 @@ namespace NekoGui_sub {
             }
         }
 
+        emit importProgress(0, 0, QObject::tr("Parsing subscription..."));
+
         // 解析并添加 profile
         rawUpdater->update(content);
 
         if (group != nullptr) {
+            emit importProgress(0, 0, QObject::tr("Applying profile changes..."));
             out_all = group->Profiles();
 
             QString change_text;
 
             if (NekoGui::dataStore->sub_clear) {
                 // all is new profile
-                for (const auto &ent: out_all) {
-                    change_text += "[+] " + ent->bean->DisplayTypeAndName() + "\n";
-                }
+                change_text = FormatProfileChangeLines("[+] ", out_all);
             } else {
                 // find and delete not updated profile by ProfileFilter
                 NekoGui::ProfileFilter::OnlyInSrc_ByPointer(out_all, in, out);
@@ -573,14 +628,8 @@ namespace NekoGui_sub {
                 NekoGui::ProfileFilter::OnlyInSrc(out, in, only_out);
                 NekoGui::ProfileFilter::Common(in, out, update_keep, update_del, false);
 
-                QString notice_added;
-                QString notice_deleted;
-                for (const auto &ent: only_out) {
-                    notice_added += "[+] " + ent->bean->DisplayTypeAndName() + "\n";
-                }
-                for (const auto &ent: only_in) {
-                    notice_deleted += "[-] " + ent->bean->DisplayTypeAndName() + "\n";
-                }
+                auto notice_added = FormatProfileChangeLines("[+] ", only_out);
+                auto notice_deleted = FormatProfileChangeLines("[-] ", only_in);
 
                 // sort according to order in remote
                 group->order = {};
@@ -597,8 +646,9 @@ namespace NekoGui_sub {
                 group->Save();
 
                 // cleanup
+                QSet<int> keepIds = QSet<int>::fromList(group->order);
                 for (const auto &ent: out_all) {
-                    if (!group->order.contains(ent->id)) {
+                    if (!keepIds.contains(ent->id)) {
                         NekoGui::profileManager->DeleteProfile(ent->id);
                     }
                 }
@@ -612,9 +662,11 @@ namespace NekoGui_sub {
             }
 
             MW_show_log("<<<<<<<< " + QObject::tr("Change of %1:").arg(group->name) + "\n" + change_text);
+            emit importProgress(0, 0, QObject::tr("Refreshing profile list..."));
             MW_dialog_message("SubUpdater", "finish-dingyue");
         } else {
             NekoGui::dataStore->imported_count = rawUpdater->updated_order.count();
+            emit importProgress(0, 0, QObject::tr("Refreshing profile list..."));
             MW_dialog_message("SubUpdater", "finish");
         }
     }

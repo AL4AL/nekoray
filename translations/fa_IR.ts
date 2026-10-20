@@ -1716,6 +1716,10 @@ End: %2</source>
 To use them again, re-import them from their share links.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Subscription</source>
+        <translation type="unfinished">اشتراک</translation>
+    </message>
 </context>
 <context>
     <name>ProxyItem</name>
@@ -1862,6 +1866,31 @@ Direct: %2</source>
     </message>
     <message>
         <source>Speedtest finished.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>... and %1 more
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Importing profiles... %1/%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Downloading subscription...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parsing subscription...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Applying profile changes...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refreshing profile list...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
