@@ -1,26 +1,24 @@
 # NekoBox For PC
 
-> **Update by [AL4AL](https://github.com/AL4AL)** — maintained fork of [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray).
+> **ARCHIVED** — This repository is read-only. **Successor: [AL4AL/Throne](https://github.com/AL4AL/Throne)** (fork of [throneproj/Throne](https://github.com/throneproj/Throne)).
 >
-> **Added XHTTP (splitHTTP) transport support**: share-link import/export (`type=xhttp`, `mode`, `path`, `host`, `extra`, `pcs`/`pinSHA256`), edit-dialog fields, and a sing-box core port of the hiddify-sing-box implementation with Xray-compatible behavior (HTTP version selection, `certificate_sha256` pinning for self-signed servers).
+> Details: [ARCHIVED.md](ARCHIVED.md). Historical releases remain at https://github.com/AL4AL/nekoray/releases
 >
-> 本仓库是 [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) 的**更新分支，由 AL4AL 维护**：新增 **XHTTP (splitHTTP)** 传输支持（分享链接导入导出、编辑界面、sing-box 内核移植自 hiddify-sing-box，行为兼容 Xray，支持 `pcs`/`pinSHA256` 证书锁定，可连接自签证书服务器）。
->
-> **Releases: https://github.com/AL4AL/nekoray/releases**
+> **已归档** — 请使用后续项目 **[AL4AL/Throne](https://github.com/AL4AL/Throne)**。说明见 [ARCHIVED.md](ARCHIVED.md)。
 
-Qt based cross-platform GUI proxy configuration manager (backend: sing-box)
+Qt based cross-platform GUI proxy configuration manager (backend: sing-box). **No longer maintained.**
 
-Support Windows / Linux out of the box now.
+Support Windows / Linux out of the box (last maintained release).
 
-基于 Qt 的跨平台代理配置管理器 (后端 sing-box)
+基于 Qt 的跨平台代理配置管理器 (后端 sing-box)。**已停止维护。**
 
-目前支持 Windows / Linux 开箱即用
+## Why this fork was archived / 为何归档
 
-## Why this fork / 为什么有这个分支
+The original [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) was archived on 2025-03-17. This unofficial AL4AL fork kept it building and added XHTTP, then **moved ongoing desktop work to Throne** (broader protocols, Qt6, macOS, dual core). See [ARCHIVED.md](ARCHIVED.md).
 
-The original [MatsuriDayo/nekoray](https://github.com/MatsuriDayo/nekoray) was **archived on 2025-03-17** and is read-only. This fork keeps it building and usable on current systems, and adds XHTTP support. It is an **unofficial continuation by [AL4AL](https://github.com/AL4AL)** — not affiliated with, nor endorsed by, the original authors.
+原上游已归档。本分支在完成 XHTTP 等改进后，桌面端后续开发转到 **Throne**。详见 [ARCHIVED.md](ARCHIVED.md)。
 
-原仓库已于 2025-03-17 归档只读。本分支由 AL4AL 非官方维护，与原作者无关。
+## Historical notes / 历史说明 (frozen)
 
 ### What's different from upstream 4.0.1 / 相对上游 4.0.1 的改进
 
